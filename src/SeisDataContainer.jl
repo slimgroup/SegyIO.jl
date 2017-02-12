@@ -1,5 +1,5 @@
 module SeisDataContainer
 
-# package code goes here
+    include("sdc_segyscan.jl")
 
 end # module
