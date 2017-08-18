@@ -14,7 +14,8 @@ function read_trace!(s::IO, fh::BinaryFileHeader, datatype::Type,
     
     # Read trace
     setindex!(data, read_tracedata(s, fh, datatype), :, trace)
-
+    
+    nothing
 end
 
 """
@@ -35,7 +36,8 @@ function read_trace!(s::IO, fh::BinaryFileHeader, datatype::Type,
     
     # Read trace
     setindex!(data, read_tracedata(s, fh, datatype), :, trace)
-
+    
+    nothing
 end
 """
 Read a single trace from current position in stream as Float32

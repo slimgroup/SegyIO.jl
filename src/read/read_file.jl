@@ -28,7 +28,7 @@ function read_file(s::IO; start_byte::Int = 3600, end_byte::Int = position(seeke
 
     # Read traces
     ntraces = Int((end_byte - start_byte)/(240 + fh.ns*4))
-    println(ntraces)
+    println("Reading $ntraces traces.")
 
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
@@ -72,7 +72,7 @@ function read_file(s::IO, keys::Array{String, 1}; start_byte::Int = 3600, end_by
 
     # Read traces
     ntraces = Int((end_byte - start_byte)/(240 + fh.ns*4))
-    println(ntraces)
+    println("Reading $ntraces traces.")
 
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
