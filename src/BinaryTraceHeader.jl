@@ -1,4 +1,4 @@
-export BinaryTraceHeader
+export BinaryTraceHeader, th_byte2sample
 
 type BinaryTraceHeader
     tracl::Int32
@@ -81,7 +81,6 @@ type BinaryTraceHeader
     ntr::Int32
     mark::Int16
     unass::Int16
-    th_byte2sample::Dict{String, Int32}
 end
 
 function th_byte2sample()
@@ -177,5 +176,5 @@ function BinaryTraceHeader()
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
-    th_byte2sample())
+    )
 end

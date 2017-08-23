@@ -8,7 +8,7 @@ Use: fileheader = read_fileheader(s::IO; bigendian::Bool = true)
 
 Returns a binary trace header formed from the current position in the stream 's'.
 """
-function read_traceheader(s::IO; bigendian::Bool = true)
+function read_traceheader(s::IO, th_byte2sample::Dict{String,Int32}; bigendian::Bool = true)
 
     # Initialize binary file header
     traceheader = BinaryTraceHeader()
@@ -16,13 +16,13 @@ function read_traceheader(s::IO; bigendian::Bool = true)
     if bigendian
 
         # Read all header values and put in fileheader
-        for k in keys(traceheader.th_byte2sample)
+        for k in keys(th_byte2sample)
 
             # Mark start of trace header
             m = mark(s)
 
             # Seek to this header value location
-            skip(s, traceheader.th_byte2sample[k])
+            skip(s, th_byte2sample[k])
 
             sym = Symbol(k)
             updateTH_b!(s, traceheader, getfield(traceheader, sym), sym)
@@ -34,13 +34,13 @@ function read_traceheader(s::IO; bigendian::Bool = true)
     else
 
         # Read all header values and put in fileheader
-        for k in keys(traceheader.th_byte2sample)
+        for k in keys(th_byte2sample)
 
             # Mark start of trace header
             m = mark(s)
 
             # Seek to this header value location
-            skip(s, traceheader.th_byte2sample[k])
+            skip(s, th_byte2sample[k])
 
             sym = Symbol(k)
             updateTH!(s, traceheader, getfield(traceheader, sym), sym)
@@ -63,7 +63,8 @@ Use: fileheader = read_traceheader(s::IO, keys = Array{String,1}; bigendian::Boo
 Returns a binary trace header formed from the current position in the stream 's', only reading
 header values denoted in 'keys'.
 """
-function read_traceheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
+function read_traceheader(s::IO, keys::Array{String,1}, th_byte2sample::Dict{String, Int32};
+                                bigendian::Bool = true)
 
     # Initialize binary file header
     traceheader = BinaryTraceHeader()
@@ -77,7 +78,7 @@ function read_traceheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
             m = mark(s)
 
             # Seek to this header value location
-            skip(s, traceheader.th_byte2sample[k])
+            skip(s, th_byte2sample[k])
 
             sym = Symbol(k)
             updateTH_b!(s, traceheader, getfield(traceheader, sym), sym)
@@ -95,7 +96,7 @@ function read_traceheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
             m = mark(s)
 
             # Seek to this header value location
-            skip(s, traceheader.th_byte2sample[k])
+            skip(s, th_byte2sample[k])
 
             sym = Symbol(k)
             updateTH!(s, traceheader, getfield(traceheader, sym), sym)
