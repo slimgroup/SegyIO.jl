@@ -12,16 +12,17 @@ function read_fileheader(s::IO; bigendian::Bool = true)
 
     # Initialize binary file header
     fileheader = BinaryFileHeader()
+    fh_b2s = fh_byte2sample()
 
     # Return to start of stream
     seekstart(s)
 
     if bigendian
         # Read all header values and put in fileheader
-        for k in keys(fileheader.fh_byte2sample)
+        for k in keys(fh_b2s)
 
            # Seek to this header value location
-           seek(s, fileheader.fh_byte2sample[k])
+           seek(s, fh_b2s[k])
 
            # Read into file header
            sym = Symbol(k)
@@ -29,10 +30,10 @@ function read_fileheader(s::IO; bigendian::Bool = true)
         end
     else
         # Read all header values and put in fileheader
-        for k in keys(fileheader.fh_byte2sample)
+        for k in keys(fh_b2s)
 
            # Seek to this header value location
-           seek(s, fileheader.fh_byte2sample[k])
+           seek(s, fh_b2s[k])
 
            # Read into file header
            sym = Symbol(k)
@@ -78,6 +79,7 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
 
     # Initialize binary file header
     fileheader = BinaryFileHeader()
+    fh_b2s = fh_b2s()
 
     # Return to start of stream
     seekstart(s)
@@ -87,7 +89,7 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
         for k in keys
 
            # Seek to this header value location
-           seek(s, fileheader.fh_byte2sample[k])
+           seek(s, fh_b2s[k])
 
            # Read into file header
            sym = Symbol(k)
@@ -98,7 +100,7 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
         for k in keys
 
            # Seek to this header value location
-           seek(s, fileheader.fh_byte2sample[k])
+           seek(s, fh_b2s[k])
 
            # Read into file header
            sym = Symbol(k)

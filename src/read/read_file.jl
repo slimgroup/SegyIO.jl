@@ -33,16 +33,16 @@ function read_file(s::IO; start_byte::Int = 3600, end_byte::Int = position(seeke
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
     data = Array{datatype, 2}(fh.ns, ntraces)
-    th_byte2sample = th_byte2sample()
+    th_b2s = th_byte2sample()
 
     # Read each trace
     for trace in 1:ntraces
 
-        read_trace!(s, fh, datatype, headers, data, trace, th_byte2sample)
+        read_trace!(s, fh, datatype, headers, data, trace, th_b2s)
 
     end
 
-    return SeisBlock(fh, headers, data)
+    return SeisBlock(FileHeader("  null  "^400, fh), headers, data)
 end
 
 """
@@ -78,14 +78,14 @@ function read_file(s::IO, keys::Array{String, 1}; start_byte::Int = 3600, end_by
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
     data = Array{datatype, 2}(fh.ns, ntraces)
-    th_byte2sample = th_byte2sample()
+    th_b2s = th_b2s()
 
     # Read each trace
     for trace in 1:ntraces
 
-        read_trace!(s, fh, datatype, headers, data, trace, keys, th_byte2sample)
+        read_trace!(s, fh, datatype, headers, data, trace, keys, th_b2s)
 
     end
 
-    return SeisBlock(fh, headers, data)
+    return SeisBlock(FileHeader("  null  "^400, fh), headers, data)
 end

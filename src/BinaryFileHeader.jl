@@ -1,4 +1,4 @@
-export BinaryFileHeader
+export BinaryFileHeader, fh_byte2sample
 
 type BinaryFileHeader
     jobid  :: Int32
@@ -31,19 +31,17 @@ type BinaryFileHeader
     fvn    :: Int16
     fltf   :: Int16
     netfh  :: Int16
-    fh_byte2sample :: Dict{String,Int}
 end 
 
 function BinaryFileHeader()
 
    BinaryFileHeader(0,0,0,0,0,0,0,0,0,0,
                     0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0, 
-                    fh_bytes2samples())
+                    0,0,0,0,0,0,0,0,0,0)
 
 end
 
-function fh_bytes2samples()
+function fh_byte2sample()
 
     Dict{String, Int32}(
         "jobid"   => 3200,
