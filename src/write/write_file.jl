@@ -2,7 +2,7 @@ export write_file
 
 function write_file(file::String, block::SeisBlock)
 
-    # Open file for writing
+    # Open buffer for writing
     s = open(file, "w")
 
     # Write FileHeader

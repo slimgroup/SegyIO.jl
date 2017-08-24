@@ -4,6 +4,12 @@ function write_fileheader(s::IO, fh::FileHeader)
     
     # Check text header length
     sizeof(fh.th) > 3200 ? throw(error("Text Header longer than 3200 bytes")) : false
+
+    # Check dsf
+    if fh.bfh.DataSampleFormat != 5
+        warn("DataSampleFormat not supported for writing. Attempting to convert to IEEE Float32")
+        fh.bfh.DataSampleFormat = 5
+    end
     
     ##0000
     # Write Text header #DEVNOTE# Big Endian?

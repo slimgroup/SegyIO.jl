@@ -1,0 +1,35 @@
+Job
+Line
+Reel
+DataTracePerEnsemble
+AuxiliaryTracePerEnsemble
+dt
+dtOrig
+ns
+nsOrig
+DataSampleFormat
+EnsembleFold
+TraceSorting
+VerticalSumCode
+SweepFrequencyStart
+SweepFrequencyEnd
+SweepLength
+SweepType
+SweepChannel
+SweepTaperlengthStart
+SweepTaperLengthEnd
+TaperType
+CorrelatedDataTraces
+BinaryGain
+AmplitudeRecoveryMethod
+MeasurementSystem
+ImpulseSignalPolarity
+VibratoryPolarityCode
+% 3261-3500 UNASSIGNED (as 120*2byte integer)
+Unassigned1
+% fseek(segyid,3500,'bof');
+SegyFormatRevisionNumber
+FixedLengthTraceFlag
+NumberOfExtTextualHeaders
+% 3506-3600 UNASSIGNED (as 47*2byte integer 
+Unassigned2

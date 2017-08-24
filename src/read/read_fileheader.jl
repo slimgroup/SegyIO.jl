@@ -9,13 +9,17 @@ Use: fileheader = read_fileheader(s::IO; bigendian::Bool = true)
 Returns a binary file header formed using bytes 3200-3600 from the stream 's'.
 """
 function read_fileheader(s::IO; bigendian::Bool = true)
-
-    # Initialize binary file header
-    fileheader = BinaryFileHeader()
-    fh_b2s = fh_byte2sample()
-
+    
     # Return to start of stream
     seekstart(s)
+
+    # Read text header
+    th = String(read(s, 3200))
+
+    # Initialize binary file header
+    bfh = BinaryFileHeader()
+    fh_b2s = fh_byte2sample()
+
 
     if bigendian
         # Read all header values and put in fileheader
@@ -26,7 +30,7 @@ function read_fileheader(s::IO; bigendian::Bool = true)
 
            # Read into file header
            sym = Symbol(k)
-           setfield!(fileheader, sym, bswap(read(s, typeof(getfield(fileheader, sym)))))
+           setfield!(bfh, sym, bswap(read(s, typeof(getfield(bfh, sym)))))
         end
     else
         # Read all header values and put in fileheader
@@ -37,13 +41,13 @@ function read_fileheader(s::IO; bigendian::Bool = true)
 
            # Read into file header
            sym = Symbol(k)
-           setfield!(fileheader, sym, read(s, typeof(getfield(fileheader, sym))))
+           setfield!(bfh, sym, read(s, typeof(getfield(bfh, sym))))
         end
     end
     
     # Move to end of file header
     seek(s, 3600)
-    return fileheader
+    return FileHeader(th, bfh)
 end
 
 
@@ -77,12 +81,16 @@ Read only the sample interval and number of traces from the file header.
 """
 function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
 
-    # Initialize binary file header
-    fileheader = BinaryFileHeader()
-    fh_b2s = fh_b2s()
-
     # Return to start of stream
     seekstart(s)
+
+    # Read text header
+    th = String(read(s, 3200))
+
+    # Initialize binary file header
+    bfh = BinaryFileHeader()
+    fh_b2s = fh_byte2sample()
+
 
     if bigendian
         # Read all header values and put in fileheader
@@ -93,7 +101,7 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
 
            # Read into file header
            sym = Symbol(k)
-           setfield!(fileheader, sym, bswap(read(s, typeof(getfield(fileheader, sym)))))
+           setfield!(bfh, sym, bswap(read(s, typeof(getfield(bfh, sym)))))
         end
     else
         # Read all header values and put in fileheader
@@ -104,12 +112,12 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
 
            # Read into file header
            sym = Symbol(k)
-           setfield!(fileheader, sym, read(s, typeof(getfield(fileheader, sym))))
+           setfield!(bfh, sym, read(s, typeof(getfield(bfh, sym))))
         end
     end
 
     # Move to end of file header
     seek(s, 3600)
 
-    return fileheader
+    return FileHeader(th, bfh)
 end

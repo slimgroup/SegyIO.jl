@@ -15,34 +15,34 @@ function read_file(s::IO; start_byte::Int = 3600, end_byte::Int = position(seeke
 
     # Check datatype of file
     datatype = Float32
-    if fh.dsf == 1
+    if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
     else
-        error("Data type not supported ($(fh.dsf))")
+        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
     # Check fixed length trace flag
-    (fh.fltf != 0) && error("Fixed length trace flag set in stream: $s")
+    (fh.bfh.FixedLengthTraceFlag != 1) && warn("Fixed length trace flag set in stream: $s")
     
     ## Check for extended text header
 
     # Read traces
-    ntraces = Int((end_byte - start_byte)/(240 + fh.ns*4))
+    ntraces = Int((end_byte - start_byte)/(240 + fh.bfh.ns*4))
     println("Reading $ntraces traces.")
 
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
-    data = Array{datatype, 2}(fh.ns, ntraces)
+    data = Array{datatype, 2}(fh.bfh.ns, ntraces)
     th_b2s = th_byte2sample()
 
     # Read each trace
     for trace in 1:ntraces
 
-        read_trace!(s, fh, datatype, headers, data, trace, th_b2s)
+        read_trace!(s, fh.bfh, datatype, headers, data, trace, th_b2s)
 
     end
 
-    return SeisBlock(FileHeader("  null  "^400, fh), headers, data)
+    return SeisBlock(fh, headers, data)
 end
 
 """
@@ -60,32 +60,32 @@ function read_file(s::IO, keys::Array{String, 1}; start_byte::Int = 3600, end_by
 
     # Check datatype of file
     datatype = Float32
-    if fh.dsf == 1
+    if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
     else
-        error("Data type not supported ($(fh.dsf))")
+        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
     # Check fixed length trace flag
-    (fh.fltf != 0) && error("Fixed length trace flag set in stream: $s")
+    (fh.bfh.FixedLengthTraceFlag != 1) && warn("Fixed length trace flag set in stream: $s")
     
     ## Check for extended text header
 
     # Read traces
-    ntraces = Int((end_byte - start_byte)/(240 + fh.ns*4))
+    ntraces = Int((end_byte - start_byte)/(240 + fh.bfh.ns*4))
     println("Reading $ntraces traces.")
 
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
-    data = Array{datatype, 2}(fh.ns, ntraces)
-    th_b2s = th_b2s()
+    data = Array{datatype, 2}(fh.bfh.ns, ntraces)
+    th_b2s = th_byte2sample()
 
     # Read each trace
     for trace in 1:ntraces
 
-        read_trace!(s, fh, datatype, headers, data, trace, keys, th_b2s)
+        read_trace!(s, fh.bfh, datatype, headers, data, trace, keys, th_b2s)
 
     end
 
-    return SeisBlock(FileHeader("  null  "^400, fh), headers, data)
+    return SeisBlock(fh, headers, data)
 end

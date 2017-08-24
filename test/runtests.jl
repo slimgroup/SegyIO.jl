@@ -1,5 +1,5 @@
-using SeisDataContainer
+using SeisIO
 using Base.Test
 
-# write your own tests here
-@test 1 == 2
+# Read
+include("test_read.jl")
