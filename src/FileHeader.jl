@@ -6,9 +6,5 @@ type FileHeader
 end
 
 function show(io::IO, fh::FileHeader)
-    
-    println("Text Header: ")
-    println(fh.th, "/n")
-    
     show(fh.bfh)
 end

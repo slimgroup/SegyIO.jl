@@ -19,7 +19,7 @@ module SeisIO
 
         # Writer
         include("write/write_fileheader.jl")
-        include("write/write_file.jl")
+        include("write/segy_write.jl")
         include("write/write_trace.jl")
 
         # Scanner

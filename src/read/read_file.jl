@@ -5,7 +5,8 @@ read_file(s)
 
 Read entire SEGY file from stream 's'.
 """
-function read_file(s::IO; start_byte::Int = 3600, end_byte::Int = position(seekend(s)))
+function read_file(s::IO, warn_user::Bool; start_byte::Int = 3600,
+                                           end_byte::Int = position(seekend(s)))
     
     # Read File Header
     fh = read_fileheader(s)
@@ -22,13 +23,12 @@ function read_file(s::IO; start_byte::Int = 3600, end_byte::Int = position(seeke
     end
 
     # Check fixed length trace flag
-    (fh.bfh.FixedLengthTraceFlag != 1) && warn("Fixed length trace flag set in stream: $s")
+    (fh.bfh.FixedLengthTraceFlag!=1 & warn_user) && warn("Fixed length trace flag set in stream: $s")
     
     ## Check for extended text header
 
     # Read traces
     ntraces = Int((end_byte - start_byte)/(240 + fh.bfh.ns*4))
-    println("Reading $ntraces traces.")
 
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)
@@ -50,7 +50,9 @@ read_file(s, keys)
 
 Read entire SEGY file from stream 's', only reading the header values in 'keys'.
 """
-function read_file(s::IO, keys::Array{String, 1}; start_byte::Int = 3600, end_byte::Int = position(seekend(s)))
+function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool; 
+                                                  start_byte::Int = 3600,
+                                                  end_byte::Int = position(seekend(s)))
     
     # Read File Header
     fh = read_fileheader(s)
@@ -67,13 +69,12 @@ function read_file(s::IO, keys::Array{String, 1}; start_byte::Int = 3600, end_by
     end
 
     # Check fixed length trace flag
-    (fh.bfh.FixedLengthTraceFlag != 1) && warn("Fixed length trace flag set in stream: $s")
+    (fh.bfh.FixedLengthTraceFlag!=1 & warn_user) && warn("Fixed length trace flag set in stream: $s")
     
     ## Check for extended text header
 
     # Read traces
     ntraces = Int((end_byte - start_byte)/(240 + fh.bfh.ns*4))
-    println("Reading $ntraces traces.")
 
     # Preallocate memory
     headers = Array{BinaryTraceHeader, 1}(ntraces)

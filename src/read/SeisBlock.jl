@@ -1,3 +1,5 @@
+import Base.size
+
 export SeisBlock
 
 type SeisBlock{DT<:Union{IBMFloat32, Float32}}
@@ -5,3 +7,5 @@ type SeisBlock{DT<:Union{IBMFloat32, Float32}}
     traceheaders::Array{BinaryTraceHeader, 1}
     data::Array{DT,2}
 end
+
+size(block::SeisBlock) = size(block.data)

@@ -70,7 +70,7 @@ s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/testdata.segy"))
     ##0000
     @testset "read_file" begin
 
-        b = read_file(s)
+        b = read_file(s, false)
         @test typeof(b) == SeisIO.SeisBlock{SeisIO.IBMFloat32}
         @test b.fileheader.bfh.ns == 560
         @test b.traceheaders[1].ns == 560
@@ -78,7 +78,7 @@ s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/testdata.segy"))
         @test length(b.traceheaders) ==  40000
         @test Float32(b.data[100]) == Float32(0)
 
-        b = read_file(s, ["ns"])
+        b = read_file(s, ["ns"], false)
         @test typeof(b) == SeisIO.SeisBlock{SeisIO.IBMFloat32}
         @test b.fileheader.bfh.ns == 560
         @test b.traceheaders[1].ns == 560
