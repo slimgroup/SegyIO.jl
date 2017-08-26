@@ -82,7 +82,7 @@ SeisIO's performance comes from parsing metadata in memory. This can be toggled 
 
     julia> @elapsed block = segy_read("testdata.segy", warn_user=false, buffer = false)
     33.427740258
-
+ 
     julia> @elapsed block = segy_read("testdata.segy", warn_user=false)
     1.393427409
 
@@ -95,12 +95,26 @@ SeisBlocks can be written back onto the disk as a SEGY file using the writer
 
 SeisBlock can currently read data in IBMFloat32(DSF 1) and IEEE Float32 (DSF 5), however it will convert IBMFloat32 data to IEEE Float32 when writing.
 
-If you want to write data as a SEGY file that isn't already in a SeisBlock, simply construct one.
+### Constructing a SeisBlock
+If the data you want to save as a SEGY file is just an array in memory, you will need to put it into a SeisBlock before you can write it. Passing a 2D array to the SeisBlock constructor will return a bare-bones SeisBlock instance, where all the headers value are zero except for the number of samples and data sample format, which are inferred from the array.
 
-    julia> fh = FileHeader("The writer will pad this to length", BinaryFileHeader())
-    julia> fh.bfh.DataSampleFormat = 5
-    julia> traceheaders = [BinaryTraceHeader() for i = 1:100]
-    julia> block = SeisBlock(fh, traceheaders, zeros(Float32, 1001, 100))
-    julia> segy_write("testwrite_custom.segy", block)
+    julia> data = zeros(Float32, 1000, 100)
+    julia> block = SeisBlock(data)
+
+Use **set_headers!** to populate the blocks headers with the desired metadata. Header fields can be passed as either strings or symbols.
+
+    julia> set_header!(block, "dt", 8000)
+
+If a value is the same for all traceheaders, you can pass a scalar.
+
+    julia> set_header!(block, :SourceX, 100)
+    julia> set_header!(block, :SourceY, 100)
+
+Or if the value varies, pass a vector with length *ntraces*.
+
+    julia> set_header!(block, :GroupX, Array(1:100))
+    julia> set_header!(block, :GroupY, Array(1:100))
+
+If a chosen field is present in both BinaryFileHeaders and BinaryTraceHeaders, both will be set.
 
 

@@ -1,11 +1,11 @@
 module SeisIO
 
     #Types
+    include("IBMFloat32.jl")
     include("BinaryFileHeader.jl")
     include("BinaryTraceHeader.jl")
     include("FileHeader.jl")
-    include("IBMFloat32.jl")
-    include("read/SeisBlock.jl")
+    include("SeisBlock.jl")
     include("scan/BlockScan.jl")
 
     # Methods
