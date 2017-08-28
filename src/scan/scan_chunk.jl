@@ -13,11 +13,9 @@ function scan_chunk!(s::IO, max_blocks_per_chunk::Int, mem_block::Int, mem_trace
 
     # Scan all blocks in this chunk
     for b in 1:nblocks_chunk
-
         println(count)      
         scan[count] = scan_block(buf, mem_block, mem_trace, keys, chunk_start, file, th_byte2sample)
         count += 1
-
     end # b
     
     close(buf)

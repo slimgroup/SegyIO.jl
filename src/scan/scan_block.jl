@@ -18,16 +18,14 @@ function scan_block(buf::IO, mem_block::Int, mem_trace::Int, keys::Array{String,
     endbyte = position(buf) + chunk_start
     
     # Parse headers for min/max
-    metadata = Array{Array{Int32,1},1}(length(keys))
-    for k in 1:length(keys)
-        
-        tmp = Int32.([getfield((headers[i]), Symbol(keys[k])) for i in 1:ntraces_block])
-        metadata[k] = [minimum(tmp); maximum(tmp)]
-
+    summary = Dict{String, Array{Int32,1}}()
+    for k in keys
+        tmp = Int32.([getfield((headers[i]), Symbol(k)) for i in 1:ntraces_block])
+        summary["$k"] = [minimum(tmp); maximum(tmp)]
     end # k
     
     # Collect in BlockScan and return
-    scan = BlockScan(file, startbyte, endbyte, keys, metadata) 
+    scan = BlockScan(file, startbyte, endbyte, summary) 
 
     return scan
 end

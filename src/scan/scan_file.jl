@@ -12,7 +12,7 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
 
     # Calc number of blocks
     fsize = position(seekend(s))
-    mem_trace = 240 + fh.ns*4
+    mem_trace = 240 + fh.bfh.ns*4
     mem_block = blocksize*mem_trace
     ntraces_file = Int((fsize - 3600)/mem_trace)
     nblocks_file = Int(ceil(ntraces_file/blocksize))
@@ -34,6 +34,6 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
 
     end # c
 
-    return scan
+    return SeisCon(fh.bfh.ns, fh.bfh.DataSampleFormat, scan)
         
 end

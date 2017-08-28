@@ -1,8 +1,8 @@
 import Base.size
 
-export SeisBlock, set_header!, set_traceheader!, set_fileheader!
+export SeisBlock, set_header!, set_traceheader!, set_fileheader!, get_header
 
-type SeisBlock{DT<:Union{IBMFloat32, Float32}}
+struct SeisBlock{DT<:Union{IBMFloat32, Float32}}
     fileheader::FileHeader
     traceheaders::Array{BinaryTraceHeader, 1}
     data::Array{DT,2}
@@ -28,14 +28,6 @@ function SeisBlock{DT<:Union{Float32, IBMFloat32}}(data::Array{DT,2})
     return block
 end
 
-"""
-set_theader!(traceheaders, header, value)
-
-For each BinaryTraceHeader in the vector 'traceheaders', set the field 'header' to 'value'.
-
-If 'value' is an Int, it will be applied to each header.
-If 'value' is a vector, the i-th 'value' will be set in the i-th traceheader.
-"""
 
 # Set traceheader for vector
 function set_traceheader!{ET<:Array{<:Integer,1}}(traceheaders::Array{BinaryTraceHeader,1},
@@ -66,6 +58,19 @@ function set_fileheader!{ET<:Integer}(fileheader::BinaryFileHeader,
     end
 end
 
+"""
+set_header!(block, header, value)
+
+Set the 'header' field in 'block' to 'value', where 'header' is either a string or symbol of a valid field in BinaryTraceHeader.
+
+If 'value' is an Int, it will be applied to each header.
+If 'value' is a vector, the i-th 'value' will be set in the i-th traceheader.
+
+# Example
+
+set_header!(block, "SourceX", 100)
+set_header!(block, :SourceY, Array(1:100))
+"""
 function set_header!{ET<:Integer}(block::SeisBlock, name_in::Union{Symbol, String}, x::ET)
     name = Symbol(name_in)  
     ntraces = size(block)[2]
@@ -96,4 +101,26 @@ function set_header!{ET<:Integer}(block::SeisBlock, name_in::Union{Symbol, Strin
     try
         set_fileheader!(block.fileheader.bfh, name, x)
     end
+end
+
+"""
+getheader(block, header)
+
+Returns a vector of 'header' values from each trace in 'block'. Trace order is preserved.
+
+# Example
+sx = get_header(block, "SourceX")
+sy = get_header(block, :SourceX)
+"""
+function get_header(block::SeisBlock, name_in::Union{Symbol, String})
+    name = Symbol(name_in)
+    ntraces = size(block)[2]
+    ftype = fieldtype(BinaryTraceHeader, name)
+    out = zeros(ftype, ntraces)
+
+    for i in 1:ntraces
+        out[i] = getfield(block.traceheaders[i], name)
+    end
+
+    return out
 end

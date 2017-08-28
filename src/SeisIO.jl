@@ -7,6 +7,7 @@ module SeisIO
     include("FileHeader.jl")
     include("SeisBlock.jl")
     include("scan/BlockScan.jl")
+    include("SeisCon.jl")
 
     # Methods
 
@@ -16,6 +17,8 @@ module SeisIO
         include("read/read_trace.jl")
         include("read/read_file.jl")
         include("read/segy_read.jl")
+        include("read/read_block.jl")
+        include("read/read_con.jl")
 
         # Writer
         include("write/write_fileheader.jl")
@@ -26,6 +29,7 @@ module SeisIO
         include("scan/scan_file.jl")
         include("scan/scan_chunk.jl")
         include("scan/scan_block.jl")
+        include("scan/delim_vector.jl")
+        include("scan/find_next_delim.jl")
 
-     
 end # module

@@ -18,7 +18,7 @@ function read_file(s::IO, warn_user::Bool; start_byte::Int = 3600,
     datatype = Float32
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
-    else
+    elseif fh.bfh.DataSampleFormat != 5
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
