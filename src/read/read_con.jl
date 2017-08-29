@@ -2,7 +2,6 @@ export read_con
 
 function read_con(con::SeisCon, keys::Array{String,1}; blocks::Array{Int,1} = Array(1:size(con)),
                                 prealloc_traces::Int = 10000)
-    gc_enable(false) 
     nblocks = length(blocks)
 
     # Check dsf
@@ -23,6 +22,7 @@ function read_con(con::SeisCon, keys::Array{String,1}; blocks::Array{Int,1} = Ar
     # Read all blocks
     for block in blocks
         
+        println(trace_count)
         # Check size of next block and pass view to pre-alloc
         brange = con.blocks[block].endbyte - con.blocks[block].startbyte
         ntraces = Int((brange)/(240 + con.ns*4))
@@ -41,8 +41,7 @@ function read_con(con::SeisCon, keys::Array{String,1}; blocks::Array{Int,1} = Ar
         read_block!(con.blocks[block], keys, con.ns, con.dsf, tmp_data, tmp_headers)
         trace_count += ntraces
     end
-    gc_enable(true)
-    gc()
+
     return SeisBlock{datatype}(fh, headers[1:trace_count], data[:,1:trace_count])
     
 end

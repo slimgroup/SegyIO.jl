@@ -8,9 +8,9 @@ function scan_chunk!(s::IO, max_blocks_per_chunk::Int, mem_block::Int, mem_trace
     buf = IOBuffer(read(s, max_blocks_per_chunk*mem_block)) 
     buf_size = position(seekend(buf))
     seekstart(buf)
-    nblocks_chunk = Int(floor(buf_size/mem_block))
+    nblocks_chunk = Int(ceil(buf_size/mem_block))
     th_byte2sample = SeisIO.th_byte2sample()
-
+    println("nblocks_chunk: $nblocks_chunk")
     # Scan all blocks in this chunk
     for b in 1:nblocks_chunk
         println(count)      

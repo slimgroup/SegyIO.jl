@@ -1,6 +1,6 @@
 export FileHeader
 
-type FileHeader
+struct FileHeader
     th::String
     bfh::BinaryFileHeader
 end

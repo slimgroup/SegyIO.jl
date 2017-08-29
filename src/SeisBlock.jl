@@ -112,7 +112,7 @@ Returns a vector of 'header' values from each trace in 'block'. Trace order is p
 sx = get_header(block, "SourceX")
 sy = get_header(block, :SourceX)
 """
-function get_header(block::SeisBlock, name_in::Union{Symbol, String})
+function get_header(block::SeisBlock, name_in::Union{Symbol, String}; scale::Bool = true)
     name = Symbol(name_in)
     ntraces = size(block)[2]
     ftype = fieldtype(BinaryTraceHeader, name)
@@ -120,6 +120,20 @@ function get_header(block::SeisBlock, name_in::Union{Symbol, String})
 
     for i in 1:ntraces
         out[i] = getfield(block.traceheaders[i], name)
+    end
+    
+    # Check to apply SrcRecScale
+    if scale && name==:SourceX||name==:SourceY||name==:GroupX||name==:GroupY
+        scaling_factor = get_header(block, :RecSourceScalar)
+        out_fl = Float64.(out)
+        for ii in 1:ntraces
+            if scaling_factor[ii] > 0
+                out_fl[ii] *= scaling_factor[ii]
+            elseif scaling_factor[ii] < 0
+                out_fl[ii] /= scaling_factor[ii]
+            end
+            return out_fl
+        end
     end
 
     return out
