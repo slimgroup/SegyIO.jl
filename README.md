@@ -22,11 +22,11 @@ First start up Julia, load the package, and move into the directory storing the 
 
 Reading a file is a simple as passing the file path to the reader
 
-    julia> block = SeisIO.segy_read("testdata.segy");
+    julia> block = segy_read("testdata.segy");
 
 Of course, the file does not need to be in the pwd.
 
-    julia> block = SeisIO.segy_read(Pkg.dir("SeisIO")*"/src/data/testdata.segy");
+    julia> block = segy_read(Pkg.dir("SeisIO")*"/src/data/testdata.segy");
 
 SeisIO currently requires fixed trace length (this will be changing soon), and will warn if the fixed trace length flag is not set in the file header.
 
@@ -72,10 +72,10 @@ Show methods for BinaryTraceHeaders and FileHeaders are provided
 
 SeisIO provides the option of reading only user-specified BinaryTraceHeader values from disk. This allows the reader to only focus on what matters, and can improve performance considerably. 
 
-    julia> @elapsed SeisIO.segy_read("testdata.segy", warn_user=false)
+    julia> @elapsed segy_read("testdata.segy", warn_user=false)
     1.492722265
 
-    julia> @elapsed SeisIO.segy_read("testdata.segy", ["SourceX", "SourceY"], warn_user=false)
+    julia> @elapsed segy_read("testdata.segy", ["SourceX", "SourceY"], warn_user=false)
     0.322848098
 
 SeisIO's performance comes from parsing metadata in memory. This can be toggled using the buffer keyword.
@@ -85,6 +85,15 @@ SeisIO's performance comes from parsing metadata in memory. This can be toggled 
  
     julia> @elapsed block = segy_read("testdata.segy", warn_user=false)
     1.393427409
+
+To get all values of a BinaryTraceHeader field for an entire block, use **get_header**
+
+    julia> sx = get_header(block, "SourceX")
+    julia> sy = get_header(block, :SourceY)
+    julia> typeof(sx)
+    Array{Int32,1}
+
+The header field values are returned in a vector, trace order is preserved.
 
 ### Writing
 
