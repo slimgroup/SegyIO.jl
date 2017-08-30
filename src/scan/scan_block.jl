@@ -6,22 +6,22 @@ function scan_block(buf::IO, mem_block::Int, mem_trace::Int, keys::Array{String,
     # Calc info about this block
     startbyte = position(buf) + chunk_start
     ntraces_block = Int(mem_block/mem_trace)
-    println(ntraces_block)
     headers = Array{BinaryTraceHeader,1}(ntraces_block)
-    
+    count = 0    
+
     # Read all headers and record end byte
-    for t in 1:ntraces_block
-
-        headers[t] = read_traceheader(buf, keys, th_byte2sample)
+    while !eof(buf) && count<ntraces_block
+        count += 1
+        headers[count] = read_traceheader(buf, keys, th_byte2sample)
         skip(buf, mem_trace-240)
-
-    end # t
+    end 
     endbyte = position(buf) + chunk_start
+    headers_block = view(headers,1:count)
     
     # Parse headers for min/max
     summary = Dict{String, Array{Int32,1}}()
     for k in keys
-        tmp = Int32.([getfield((headers[i]), Symbol(k)) for i in 1:ntraces_block])
+        tmp = Int32.([getfield((headers_block[i]), Symbol(k)) for i in 1:count])
         summary["$k"] = [minimum(tmp); maximum(tmp)]
     end # k
     

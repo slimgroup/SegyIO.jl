@@ -16,8 +16,6 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
     mem_block = blocksize*mem_trace
     ntraces_file = Int((fsize - 3600)/mem_trace)
     nblocks_file = Int(ceil(ntraces_file/blocksize))
-    println(nblocks_file)
-    println(ntraces_file/blocksize)
     scan = Array{BlockScan,1}(nblocks_file)
     count = 1
 

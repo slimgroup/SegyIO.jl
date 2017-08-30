@@ -1,12 +1,21 @@
 export read_trace
 
 """
-Reads a single trace from the current position of stream 's'.
+Use:    read_trace!(s::IO,
+                    fh::BinaryFileHeader,
+                    datatype::Type,
+                    headers::AbstractArray{BinaryTraceHeader,1},
+                    data::AbstractArray{<:Union{IBMFloat32, Float32}, 2},
+                    trace::Int, 
+                    th_byte2sample::Dict{String,Int32})
+
+Reads 'trace' from the current position of stream 's' into 'headers' and
+'data'. 
 """
 function read_trace!(s::IO, fh::BinaryFileHeader,
                     datatype::Type,
-                    headers::Array{BinaryTraceHeader,1},
-                    data::Array{<:Union{IBMFloat32, Float32}, 2},
+                    headers::AbstractArray{BinaryTraceHeader,1},
+                    data::AbstractArray{<:Union{IBMFloat32, Float32}, 2},
                     trace::Int, 
                     th_byte2sample::Dict{String,Int32})
     
@@ -20,10 +29,16 @@ function read_trace!(s::IO, fh::BinaryFileHeader,
 end
 
 """
+Use:    read_trace!(s::IO,
+                    fh::BinaryFileHeader,
+                    datatype::Type,
+                    headers::AbstractArray{BinaryTraceHeader,1},
+                    data::AbstractArray{<:Union{IBMFloat32, Float32}, 2},
+                    trace::Int,
+                    keys::Array{String,1},
+                    th_byte2sample::Dict{String,Int32})
 
-read_trace(s::IO, fh::BinaryFileHeader, datatype, headers, data, trace, keys)
-
-Reads a single trace from the current position of stream 's' into 'headers' and
+Reads 'trace' from the current position of stream 's' into 'headers' and
 'data'. Only the header values in 'keys' and read.
 """
 function read_trace!(s::IO, fh::BinaryFileHeader,
