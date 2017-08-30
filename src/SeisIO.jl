@@ -27,6 +27,7 @@ module SeisIO
 
         # Scanner
         include("scan/scan_file.jl")
+        include("scan/segy_scan.jl")
         include("scan/scan_chunk.jl")
         include("scan/scan_block.jl")
         include("scan/delim_vector.jl")
