@@ -10,7 +10,7 @@ Read 'blocks' out of 'con' into a preallocated array of size (ns x prealloc_trac
 If preallocated memory fills, it will be expanded again by 'prealloc_traces'.
 """
 function read_con(con::SeisCon, blocks::Array{Int,1}; 
-                                prealloc_traces::Int = 10000)
+                                prealloc_traces::Int = 50000)
     nblocks = length(blocks)
     maximum(blocks)>size(con) ? throw(error("Call for block $(maximum(blocks)) in a container with $(size(con)) blocks.")) : nothing
 
@@ -58,7 +58,7 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
 end
 
 function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
-                                prealloc_traces::Int = 10000)
+                                prealloc_traces::Int = 50000)
     nblocks = length(blocks)
 
     # Check dsf
@@ -88,8 +88,7 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
         isroom = (trace_count + ntraces) <= length(headers)
         if ~isroom
             println("Expanding preallocated memory")
-            data = hcat(data, Array{datatype,2}(con.ns, ntraces+prealloc_traces))
-            headers = vcat(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+
             prealloc_traces *= 2
 
         end
