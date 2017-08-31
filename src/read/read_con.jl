@@ -9,7 +9,7 @@ Read 'blocks' out of 'con' into a preallocated array of size (ns x prealloc_trac
 
 If preallocated memory fills, it will be expanded again by 'prealloc_traces'.
 """
-function read_con(con::SeisCon; blocks::Array{Int,1} = Array(1:size(con)),
+function read_con(con::SeisCon, blocks::Array{Int,1}; 
                                 prealloc_traces::Int = 10000)
     nblocks = length(blocks)
 
@@ -55,7 +55,7 @@ function read_con(con::SeisCon; blocks::Array{Int,1} = Array(1:size(con)),
     
 end
 
-function read_con(con::SeisCon, keys::Array{String,1}; blocks::Array{Int,1} = Array(1:size(con)),
+function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
                                 prealloc_traces::Int = 10000)
     nblocks = length(blocks)
 
@@ -100,3 +100,22 @@ function read_con(con::SeisCon, keys::Array{String,1}; blocks::Array{Int,1} = Ar
     return SeisBlock{datatype}(fh, headers[1:trace_count], data[:,1:trace_count])
     
 end
+
+# RANGES & INT
+function read_con{TR<:Range}(con::SeisCon, blocks::TR;
+                                prealloc_traces::Int = 10000)
+    read_con(con, Array(blocks), prealloc_traces = prealloc_traces)
+end
+function read_con(con::SeisCon, blocks::Integer;
+                                prealloc_traces::Int = 10000)
+    read_con(con, [blocks], prealloc_traces = prealloc_traces)
+end
+function read_con{TR<:Range}(con::SeisCon, keys::Array{String,1}, blocks::TR;
+                                prealloc_traces::Int = 10000)
+    read_con(con, keys, Array(blocks), prealloc_traces = prealloc_traces)
+end
+function read_con(con::SeisCon, keys::Array{String,1}, blocks::Integer;
+                                prealloc_traces::Int = 10000)
+    read_con(con, keys, [blocks], prealloc_traces = prealloc_traces)
+end
+

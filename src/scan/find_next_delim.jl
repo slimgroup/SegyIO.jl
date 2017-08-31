@@ -17,7 +17,7 @@ function find_next_delim(x::AbstractVector, i::Int, probe_length::Int)
         if j <= n
             val = x[j_prev]
             probed_val = x[j]
-
+            
             # Undershoot delim
             if val == probed_val
                 j_prev = j
@@ -37,9 +37,8 @@ function find_next_delim(x::AbstractVector, i::Int, probe_length::Int)
             # Overshoot delim
             else
                 j = j_prev
-                probe_length = floor(Int, probe_length/2)
+                probe_length = max(1,floor(Int, probe_length/2))
             end 
-
         # Probed out of bounds
         else
             j = n

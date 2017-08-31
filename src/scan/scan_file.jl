@@ -51,3 +51,47 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
     return SeisCon(fh.bfh.ns, fh.bfh.DataSampleFormat, scan)
         
 end
+
+"""
+    scan_file(file::String,
+                keys::Array{String, 1},
+                chunksize::Int = 1024)
+
+Scan `file` for header fields in `keys`, and return a SeisCon object containing
+the metadata summaries in single-source groups of traces. Load `chunksize` MB of `file`
+into memory at a time.
+
+# Example
+
+    s = scan_file('testdata.segy', ["SourceX", "SourceY"])
+
+"""
+function scan_file(file::String, keys::Array{String, 1};
+                    chunksize::Int = 1024)
+    
+    # Put fileheader in memory and read
+    s = open(file)
+    fh = read_fileheader(s)
+
+    # Add src keys if necessary 
+    "SourceX" in keys ? nothing : push!(keys, "SourceX")
+    "SourceY" in keys ? nothing : push!(keys, "SourceY")
+
+    # Calc number of blocks
+    fsize = filesize(file)
+    mem_trace = 240 + fh.bfh.ns*4
+    ntraces_file = Int((fsize - 3600)/mem_trace)
+    scan = Array{BlockScan,1}(0)
+    seek(s, 3600)
+    traces_per_chunk = Int(floor(chunksize*1024^2/mem_trace))
+    chunks = Array(0:traces_per_chunk*mem_trace:fsize)
+    push!(chunks, fsize)
+    
+    # For each chunk
+    for c in diff(chunks) 
+        scan_shots!(s, c, mem_trace, keys, file, scan)
+    end # c
+
+    return SeisCon(fh.bfh.ns, fh.bfh.DataSampleFormat, scan[1:end])
+        
+end

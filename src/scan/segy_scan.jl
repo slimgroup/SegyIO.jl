@@ -5,8 +5,10 @@ export segy_scan, merge_con
                            chunksize::Int = 1024,
                            pool::WorkerPool = WorkerPool(workers()))
 
+    returns: SeisCon
+
 Scan header fields `keys` of files in `dir` matching the filter `filt` in blocks
-containing `blocksize` traces. The scanning of files is distributed to workers
+containing `blocksize` continguous traces. The scanning of files is distributed to workers
 in `pool`, default is all workers.
 
 `chunksize` determines how many MB of data will be loaded into memory at a time.
@@ -23,12 +25,31 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::
     return merge_con(s)
 end
 
+"""
+    segy_scan(dir::String, filt::String, keys::Array{String,1}; 
+                           chunksize::Int = 1024,
+                           pool::WorkerPool = WorkerPool(workers()))
+
+If no `blocksize` is specified, the scanner automatically detects source locations and returns
+blocks of continguous traces for each source location. 
+"""
+function segy_scan(dir::String, filt::String, keys::Array{String,1}; 
+                    chunksize::Int = 1024,
+                    pool::WorkerPool = WorkerPool(workers()))
+    
+    files = searchdir(dir, filt)
+    run_scan(f) = scan_file(f, keys, chunksize=chunksize)
+    s = pmap(pool, run_scan, files)
+    
+    return merge_con(s)
+end
+
 searchdir(path,filt) = filter(x->contains(x,filt), readdir(path))
 
 """
-    collect_cons(cons::Array{SeisCon,1})
+    merge_cons(cons::Array{SeisCon,1})
 
-Collect each SeisCon object in `cons` into one SeisCon. 
+Merge `con`, a vector of SeisCon objects, into one SeisCon object. 
 """
 function merge_con(cons::Array{SeisCon,1})
     
@@ -44,6 +65,11 @@ function merge_con(cons::Array{SeisCon,1})
     end
 end
 
+"""
+    get_confield(cons::Array{SeisCon,1}, name::Symbol)
+
+Returns an Array{Int32,1} containing the value in `name` field of each SeisCon object.
+"""
 function get_confield(cons::Array{SeisCon,1}, name::Symbol)
     ncons = length(cons)
     out = zeros(Int64, ncons)
