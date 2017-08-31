@@ -84,13 +84,22 @@ function scan_file(file::String, keys::Array{String, 1};
     scan = Array{BlockScan,1}(0)
     seek(s, 3600)
     traces_per_chunk = Int(floor(chunksize*1024^2/mem_trace))
-    chunks = Array(0:traces_per_chunk*mem_trace:fsize)
-    push!(chunks, fsize)
-    
+#=    chunks = Array(0:traces_per_chunk*mem_trace:fsize)
+    fsize in chunks ? nothing : push!(chunks, fsize)
+
     # For each chunk
     for c in diff(chunks) 
         scan_shots!(s, c, mem_trace, keys, file, scan)
     end # c
+=#
+
+    mem_chunk = traces_per_chunk*mem_trace
+    fl_eof = false 
+    while !eof(s)
+        scan_shots!(s, mem_chunk, mem_trace, keys, file, scan, fl_eof)
+        println(position(s))
+        println(fsize)
+    end
 
     return SeisCon(fh.bfh.ns, fh.bfh.DataSampleFormat, scan[1:end])
         

@@ -1,6 +1,6 @@
 import Base.size, Base.getindex
 
-export SeisCon, size, get_sourcesi, getindex
+export SeisCon, size, get_sources, getindex
 
 struct SeisCon
     ns::Int

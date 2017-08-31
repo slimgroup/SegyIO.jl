@@ -12,6 +12,7 @@ If preallocated memory fills, it will be expanded again by 'prealloc_traces'.
 function read_con(con::SeisCon, blocks::Array{Int,1}; 
                                 prealloc_traces::Int = 10000)
     nblocks = length(blocks)
+    maximum(blocks)>size(con) ? throw(error("Call for block $(maximum(blocks)) in a container with $(size(con)) blocks.")) : nothing
 
     # Check dsf
     datatype = Float32
@@ -42,6 +43,7 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
             println("Expanding preallocated memory")
             data = hcat(data, Array{datatype,2}(con.ns, ntraces+prealloc_traces))
             headers = vcat(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+            prealloc_traces *= 2
         end
         tmp_data = view(data, :,(trace_count+1):(trace_count+ntraces))
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
@@ -88,6 +90,8 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
             println("Expanding preallocated memory")
             data = hcat(data, Array{datatype,2}(con.ns, ntraces+prealloc_traces))
             headers = vcat(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+            prealloc_traces *= 2
+
         end
         tmp_data = view(data, :,(trace_count+1):(trace_count+ntraces))
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
