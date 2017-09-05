@@ -1,10 +1,9 @@
 export scan_file
 
 """
-    scan_file(file::String,
-                keys::Array{String, 1},
-                blocksize::Int;
-                chunksize::Int = 1024)
+    scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
+                chunksize::Int = 1024,
+                verbosity::Int = 1)
 
 Scan `file` for header fields in `keys`, and return a SeisCon object containing
 the metadata summaries in `blocksize` groups of traces. Load `chunksize` MB of `file`
@@ -13,14 +12,18 @@ into memory at a time.
 If the number of traces in `file` are not divisible by `blocksize`, the last block will
 summarize the remaining traces.
 
+`verbosity` set to 0 silences updates on the current file being scanned.
+
 # Example
 
     s = scan_file('testdata.segy', ["SourceX", "SourceY"], 300)
 """
 function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
-                    chunksize::Int = 1024)
+                    chunksize::Int = 1024,
+                    verbosity::Int = 1)
     
     # Put fileheader in memory and read
+    verbosity==1 && println("Scanning ... $file") 
     s = open(file)
     fh = read_fileheader(s)
 
@@ -53,9 +56,9 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
 end
 
 """
-    scan_file(file::String,
-                keys::Array{String, 1},
-                chunksize::Int = 1024)
+    scan_file(file::String, keys::Array{String, 1};
+                chunksize::Int = 1024,
+                verbosity::Int = 1)
 
 Scan `file` for header fields in `keys`, and return a SeisCon object containing
 the metadata summaries in single-source groups of traces. Load `chunksize` MB of `file`
@@ -67,9 +70,11 @@ into memory at a time.
 
 """
 function scan_file(file::String, keys::Array{String, 1};
-                    chunksize::Int = 10*1024)
-    println("Scanning ... $file") 
+                    chunksize::Int = 10*1024,
+                    verbosity::Int = 1)
+
     # Put fileheader in memory and read
+    verbosity==1 && println("Scanning ... $file") 
     s = open(file)
     fh = read_fileheader(s)
 

@@ -1,4 +1,4 @@
-import Base.size, Base.getindex
+import Base.size, Base.length, Base.getindex
 
 export SeisCon, size, get_sources, getindex
 
@@ -13,7 +13,8 @@ size(con)
 
 Returns the number of blocks covered in the scan
 """
-size(con::SeisCon) = length(con.blocks)
+size(con::SeisCon) = size(con.blocks)
+length(con::SeisCon) = length(con.blocks)
 
 get_header(con::SeisCon,name::String)=[con.blocks[i].summary[name] for i in 1:size(con)]      
 

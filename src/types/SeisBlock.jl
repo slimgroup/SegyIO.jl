@@ -125,14 +125,10 @@ function get_header(block::SeisBlock, name_in::Union{Symbol, String}; scale::Boo
     # Check to apply SrcRecScale
     if scale && name==:SourceX||name==:SourceY||name==:GroupX||name==:GroupY
         scaling_factor = get_header(block, :RecSourceScalar)
-        out_fl = Float64.(out)
+        out = Float64.(out)
         for ii in 1:ntraces
-            if scaling_factor[ii] > 0
-                out_fl[ii] *= scaling_factor[ii]
-            elseif scaling_factor[ii] < 0
-                out_fl[ii] /= scaling_factor[ii]
-            end
-            return out_fl
+            fact = scaling_factor[ii]
+            fact > 0 ? out[ii] *= fact : out[ii] /= fact 
         end
     end
 

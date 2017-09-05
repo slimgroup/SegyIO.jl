@@ -2,7 +2,7 @@ export read_con
 
 """
 Use:   read_con(con::SeisCon; 
-                blocks::Array{Int,1} = Array(1:size(con)),
+                blocks::Array{Int,1} = Array(1:length(con)),
                 prealloc_traces::Int = 10000)
 
 Read 'blocks' out of 'con' into a preallocated array of size (ns x prealloc_traces).
@@ -12,7 +12,7 @@ If preallocated memory fills, it will be expanded again by 'prealloc_traces'.
 function read_con(con::SeisCon, blocks::Array{Int,1}; 
                                 prealloc_traces::Int = 50000)
     nblocks = length(blocks)
-    maximum(blocks)>size(con) ? throw(error("Call for block $(maximum(blocks)) in a container with $(size(con)) blocks.")) : nothing
+    maximum(blocks)>length(con) ? throw(error("Call for block $(maximum(blocks)) in a container with $(length(con)) blocks.")) : nothing
 
     # Check dsf
     datatype = Float32
