@@ -1,5 +1,5 @@
 # SeisIO.jl
-SeisIO is a Julia package for reading and writing SEGY Rev 1 files. 
+SeisIO is a Julia package for reading, writing, and scanning SEGY Rev 1 files. A scanned collection of files returns a SeisCon object, which partitions the volume and provides metadata summaries and direct access to all files.
 
 ## Installation 
 SeisIO can be installed using the Julia package manager. If you have a Github account, run the following from the Julia REPL:
@@ -13,10 +13,30 @@ Otherwise run:
 ## Examples
 Example data has been provided with the package in src/data/
 
+### Scanning
+
+A scanned volume provides a higher level of abstraction, removing the need for a user to directly manage individual files. Scanning a file (or a group of files) returns a `SeisCon` object, which partitions the volume into more managable pieces, and contains the necessary information to directly access these partitions. By default, the scanner will automatically partition the volume when the source location changes.
+
+`segy_scan` will scan all files matching the specified filter in a given directory.
+
+    julia> using SeisIO
+
+    julia> dir2scan = Pkg.dir("SeisIO")*"/src/data/"
+    "/home/slim/klensink/.julia/v0.6/SeisIO/src/data/"
+
+    julia> file_filter = ".segy"
+    ".segy"
+
+    julia> keys = ["GroupX"; "GroupY"]
+    2-element Array{String,1}:
+     "GroupX"
+     "GroupY"
+
+    julia> s = segy_scan(dir2scan, file_filter, keys);
+
 ### Reading
 First start up Julia, load the package, and move into the directory storing the example SEGY file.
     
-    julia
     julia> using SeisIO
     julia> cd(Pkg.dir("SeisIO")*"/src/data/")
 
