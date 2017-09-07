@@ -141,6 +141,19 @@ The default `chunksize` is 1024 MB, and can be modified using the `chunksize` ke
     Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_61_80.segy
     Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_81_97.segy
       0.110804 seconds (385.64 k allocations: 103.844 MiB, 4.85% gc time)
+    
+The performance hit of using a small chunk size becomes more pronounced at scale. The timings below are from scanning a 330 GB file using a 1 GB and a 20 GB `chunksize` respectively.
+
+    julia> @time s = segy_scan(pwd(), bigfile, ["GroupX"; "GroupY"]);
+    Scanning ... _____.sgy
+    739.929009 seconds (1.01 G allocations: 359.513 GiB, 6.06% gc time) 
+
+    julia> @time s = segy_scan(pwd(), bigfile, ["GroupX"; "GroupY"], chunksize = 20*1024);
+    Scanning ... _____.sgy
+    691.861098 seconds (1.00 G allocations: 368.240 GiB, 1.63% gc time)
+
+These timings show that `chunksize` should be set as large as possible for optimal performance, however the performance hit taken when scanning files much larger than memory is acceptable.
+
 
 ## Reading
 -----
