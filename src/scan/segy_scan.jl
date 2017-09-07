@@ -22,7 +22,6 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::
                     pool::WorkerPool = WorkerPool(workers()),
                     verbosity::Int = 1)
     
-    
     endswith(dir, "/") ? nothing : dir *= "/"
     filenames = searchdir(dir, filt)
     files = map(x -> dir*x, filenames)
@@ -36,6 +35,7 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, b
                     chunksize::Int = 1024,
                     pool::WorkerPool = WorkerPool(workers()),
                     verbosity::Int = 1)
+    
     files = Array{String,1}()
     for dir in dirs 
         endswith(dir, "/") ? nothing : dir *= "/"
