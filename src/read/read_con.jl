@@ -32,7 +32,6 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
     # Read all blocks
     for block in blocks
         
-        println(trace_count)
         # Check size of next block and pass view to pre-alloc
         brange = con.blocks[block].endbyte - con.blocks[block].startbyte
         ntraces = Int((brange)/(240 + con.ns*4))
@@ -79,7 +78,6 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
     # Read all blocks
     for block in blocks
         
-        println(trace_count)
         # Check size of next block and pass view to pre-alloc
         brange = con.blocks[block].endbyte - con.blocks[block].startbyte
         ntraces = Int((brange)/(240 + con.ns*4))

@@ -8,15 +8,10 @@ struct SeisCon
     blocks::Array{BlockScan,1}
 end
 
-"""
-size(con)
-
-Returns the number of blocks covered in the scan
-"""
 size(con::SeisCon) = size(con.blocks)
 length(con::SeisCon) = length(con.blocks)
 
-get_header(con::SeisCon,name::String)=[con.blocks[i].summary[name] for i in 1:size(con)]      
+get_header(con::SeisCon,name::String)=[con.blocks[i].summary[name] for i in 1:length(con)]
 
 """
     get_sources(con::SeisCon)
@@ -45,4 +40,7 @@ end
 
 function getindex{TA<:Union{Array{<:Integer,1}, Range, Integer}}(con::SeisCon, a::TA) 
     read_con(con, a)
+end
+function getindex(con::SeisCon, a::Colon) 
+    read_con(con, 1:length(con))
 end
