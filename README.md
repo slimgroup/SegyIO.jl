@@ -127,19 +127,19 @@ Inorder to scan files larger than memory, the scanner reads `chunksize` MB of da
 The default `chunksize` is 1024 MB, and can be modified using the `chunksize` keyword argument in `segy_scan`. Increasing `chunksize` yields moderate performance gains at the expensive of increased peak memory.
 
     julia> @time s = segy_scan(dir2scan, file_filter, keys);
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_1_20.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_21_40.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_41_60.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_61_80.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_81_97.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_1_20.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_21_40.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_41_60.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_61_80.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_81_97.segy
       0.077360 seconds (384.77 k allocations: 5.013 GiB, 10.37% gc time)
 
     julia> @time s = segy_scan(dir2scan, file_filter, keys, chunksize = 10);
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_1_20.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_21_40.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_41_60.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_61_80.segy
-    Scanning ... /home/slim/klensink/.julia/v0.6/SeisIO/src/data/overthrust_2D_shot_81_97.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_1_20.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_21_40.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_41_60.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_61_80.segy
+    Scanning ... /SeisIO/src/data/overthrust_2D_shot_81_97.segy
       0.110804 seconds (385.64 k allocations: 103.844 MiB, 4.85% gc time)
     
 The performance hit of using a small chunk size becomes more pronounced at scale. The timings below are from scanning a 330 GB file using a 1 GB and a 20 GB `chunksize` respectively.
