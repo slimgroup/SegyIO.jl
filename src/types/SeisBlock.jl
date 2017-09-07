@@ -128,7 +128,7 @@ function get_header(block::SeisBlock, name_in::Union{Symbol, String}; scale::Boo
         out = Float64.(out)
         for ii in 1:ntraces
             fact = scaling_factor[ii]
-            fact > 0 ? out[ii] *= fact : out[ii] /= fact 
+            fact > 0 ? out[ii] *= fact : out[ii] /= abs(fact) 
         end
     end
 
