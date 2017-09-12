@@ -1,4 +1,4 @@
-import Base.size
+import Base.size, Base.length
 
 export SeisBlock, set_header!, set_traceheader!, set_fileheader!, get_header
 
@@ -9,6 +9,7 @@ struct SeisBlock{DT<:Union{IBMFloat32, Float32}}
 end
 
 size(block::SeisBlock) = size(block.data)
+length(block::SeisBlock) = length(block.traceheaders)
 
 function SeisBlock{DT<:Union{Float32, IBMFloat32}}(data::Array{DT,2})
 
@@ -114,7 +115,7 @@ sy = get_header(block, :SourceX)
 """
 function get_header(block::SeisBlock, name_in::Union{Symbol, String}; scale::Bool = true)
     name = Symbol(name_in)
-    ntraces = size(block)[2]
+    ntraces = length(block)
     ftype = fieldtype(BinaryTraceHeader, name)
     out = zeros(ftype, ntraces)
 

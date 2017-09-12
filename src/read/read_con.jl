@@ -3,7 +3,7 @@ export read_con
 """
 Use:   read_con(con::SeisCon; 
                 blocks::Array{Int,1} = Array(1:length(con)),
-                prealloc_traces::Int = 10000)
+                prealloc_traces::Int = 50000)
 
 Read 'blocks' out of 'con' into a preallocated array of size (ns x prealloc_traces).
 
@@ -21,6 +21,9 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
     elseif con.dsf != 5
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
+
+    # Check for RecSrcScalar
+    in("RecSourceScalar", keys) ? nothing : push!(keys, "RecSourceScalar")
 
     # Pre-allocate
     data = Array{datatype,2}(con.ns, prealloc_traces) 
@@ -68,6 +71,9 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
+    # Check for RecSrcScalar
+    in("RecSourceScalar", keys) ? nothing : push!(keys, "RecSourceScalar")
+
     # Pre-allocate
     data = Array{datatype,2}(con.ns, prealloc_traces) 
     headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
@@ -104,19 +110,19 @@ end
 
 # RANGES & INT
 function read_con{TR<:Range}(con::SeisCon, blocks::TR;
-                                prealloc_traces::Int = 10000)
+                                prealloc_traces::Int = 50000)
     read_con(con, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con(con::SeisCon, blocks::Integer;
-                                prealloc_traces::Int = 10000)
+                                prealloc_traces::Int = 50000)
     read_con(con, [blocks], prealloc_traces = prealloc_traces)
 end
 function read_con{TR<:Range}(con::SeisCon, keys::Array{String,1}, blocks::TR;
-                                prealloc_traces::Int = 10000)
+                                prealloc_traces::Int = 50000)
     read_con(con, keys, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con(con::SeisCon, keys::Array{String,1}, blocks::Integer;
-                                prealloc_traces::Int = 10000)
+                                prealloc_traces::Int = 50000)
     read_con(con, keys, [blocks], prealloc_traces = prealloc_traces)
 end
 
