@@ -21,11 +21,11 @@ First start up Julia, load the package, and move into the directory storing the 
 
 Reading a file is a simple as passing the file path to the reader
 
-    julia> block = segy_read("testdata.segy");
+    julia> block = segy_read("overthrust_2D_shot_1_20.segy");
 
 Of course, the file does not need to be in the pwd.
 
-    julia> block = segy_read(Pkg.dir("SeisIO")*"/src/data/testdata.segy");
+    julia> block = segy_read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy");
 
 SeisIO currently requires fixed trace length (this will be changing soon), and will warn if the fixed trace length flag is not set in the file header.
 
@@ -38,52 +38,53 @@ Show methods for BinaryTraceHeaders and FileHeaders are provided
 
     julia> block.fileheader
     BinaryFileHeader:
-                                Job:      9999
-                               Line:      9999
-                               Reel:         1
-               DataTracePerEnsemble:       400
-          AuxiliaryTracePerEnsemble:         0
-                                 dt:      4000
-                             dtOrig:      4000
-                                 ns:       560
-                             nsOrig:       560
-                   DataSampleFormat:         1
-                       EnsembleFold:    -13922
-                       TraceSorting:         4
-                    VerticalSumCode:         1
-                SweepFrequencyStart:         0
-                  SweepFrequencyEnd:         0
-                        SweepLength:         0
-                          SweepType:         0
-                       SweepChannel:         0
-              SweepTaperlengthStart:         0
-                SweepTaperLengthEnd:         0
-                          TaperType:         0
-               CorrelatedDataTraces:         2
-                         BinaryGain:         1
-            AmplitudeRecoveryMethod:         4
-                  MeasurementSystem:         2
-              ImpulseSignalPolarity:         0
-              VibratoryPolarityCode:         0
-           SegyFormatRevisionNumber:         0
-               FixedLengthTraceFlag:         0
-          NumberOfExtTextualHeaders:         0
+                                    Job:         1
+                                   Line:         1
+                                   Reel:         1
+                   DataTracePerEnsemble:         1
+              AuxiliaryTracePerEnsemble:         0
+                                     dt:      4000
+                                 dtOrig:         0
+                                     ns:       751
+                                 nsOrig:         0
+                       DataSampleFormat:         1
+                           EnsembleFold:         0
+                           TraceSorting:         0
+                        VerticalSumCode:         0
+                    SweepFrequencyStart:         0
+                      SweepFrequencyEnd:         0
+                            SweepLength:         0
+                              SweepType:         0
+                           SweepChannel:         0
+                  SweepTaperlengthStart:         0
+                    SweepTaperLengthEnd:         0
+                              TaperType:         0
+                   CorrelatedDataTraces:         0
+                             BinaryGain:         0
+                AmplitudeRecoveryMethod:         0
+                      MeasurementSystem:         0
+                  ImpulseSignalPolarity:         0
+                  VibratoryPolarityCode:         0
+               SegyFormatRevisionNumber:         0
+                   FixedLengthTraceFlag:         0
+              NumberOfExtTextualHeaders:         0
+
 
 SeisIO provides the option of reading only user-specified BinaryTraceHeader values from disk. This allows the reader to only focus on what matters, and can improve performance considerably. 
 
-    julia> @elapsed segy_read("testdata.segy", warn_user=false)
-    1.492722265
+    julia> @elapsed segy_read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy")
+    0.105732397
 
-    julia> @elapsed segy_read("testdata.segy", ["SourceX", "SourceY"], warn_user=false)
-    0.322848098
+    julia> @elapsed segy_read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy", ["SourceX"; "SourceY"])
+    0.012128395
 
 SeisIO's performance comes from parsing metadata in memory. This can be toggled using the buffer keyword.
 
-    julia> @elapsed block = segy_read("testdata.segy", warn_user=false, buffer = false)
-    33.427740258
- 
-    julia> @elapsed block = segy_read("testdata.segy", warn_user=false)
-    1.393427409
+    julia> @elapsed segy_read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy", buffer=false)
+    2.640242233
+
+    julia> @elapsed segy_read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy", ["SourceX"; "SourceY"], buffer=false)
+    0.069372419
 
 To get all values of a BinaryTraceHeader field for an entire block, use **get_header**
 

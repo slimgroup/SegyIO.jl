@@ -1,6 +1,6 @@
 # Test reading component of SeisIO
 
-s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/testdata.segy"))
+s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy"))
 
 @testset "read" begin
 
@@ -10,26 +10,26 @@ s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/testdata.segy"))
         fh = read_fileheader(s)
         @test typeof(fh) == SeisIO.FileHeader 
         @test sizeof(fh.th) == 3200
-        @test fh.bfh.ns == 560
-        @test fh.bfh.Job == 9999
+        @test fh.bfh.ns == 751
+        @test fh.bfh.Job == 1
 
         fh = read_fileheader(s, ["ns"; "Job"])
         @test typeof(fh) == SeisIO.FileHeader 
         @test sizeof(fh.th) == 3200
-        @test fh.bfh.ns == 560
-        @test fh.bfh.Job == 9999
+        @test fh.bfh.ns == 751
+        @test fh.bfh.Job == 1
 
         fh = read_fileheader(s, bigendian = false )
         @test typeof(fh) == SeisIO.FileHeader 
         @test sizeof(fh.th) == 3200
-        @test fh.bfh.ns == 12290
-        @test fh.bfh.Job == 254214144
+        @test fh.bfh.ns == -4350
+        @test fh.bfh.Job == 16777216
 
         fh = read_fileheader(s, ["ns"; "Job"], bigendian = false )
         @test typeof(fh) == SeisIO.FileHeader 
         @test sizeof(fh.th) == 3200
-        @test fh.bfh.ns == 12290
-        @test fh.bfh.Job == 254214144
+        @test fh.bfh.ns == -4350
+        @test fh.bfh.Job == 16777216
 
     end
     println(" ")
@@ -42,28 +42,28 @@ s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/testdata.segy"))
 
         th = read_traceheader(s, th_b2s)
         @test typeof(th) == BinaryTraceHeader
-        @test th.ns == 560
-        @test th.SourceX == 11160000
-        @test th.GroupX == 11160000
+        @test th.ns == 751
+        @test th.SourceX == 400
+        @test th.GroupX == 100
 
         seek(s, 3600)
         th = read_traceheader(s, ["ns", "SourceX", "GroupX"], th_b2s)
         @test typeof(th) == BinaryTraceHeader
-        @test th.ns == 560
-        @test th.SourceX == 11160000
-        @test th.GroupX == 11160000
+        @test th.ns == 751
+        @test th.SourceX == 400
+        @test th.GroupX == 100
 
         seek(s, 3600)
         th = read_traceheader(s, th_b2s, bigendian = false)
         @test typeof(th) == BinaryTraceHeader
-        @test th.ns == 12290
-        @test th.SourceX == -1068914176
+        @test th.ns == -4350
+        @test th.SourceX == -1878982656
 
         seek(s, 3600)
         th = read_traceheader(s, ["ns", "SourceX", "GroupX"], th_b2s, bigendian = false)
         @test typeof(th) == BinaryTraceHeader
-        @test th.ns == 12290
-        @test th.SourceX == -1068914176
+        @test th.ns == -4350
+        @test th.SourceX == -1878982656
 
     end
 
@@ -72,19 +72,19 @@ s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/testdata.segy"))
 
         b = read_file(s, false)
         @test typeof(b) == SeisIO.SeisBlock{SeisIO.IBMFloat32}
-        @test b.fileheader.bfh.ns == 560
-        @test b.traceheaders[1].ns == 560
-        @test size(b.data) == (560, 40000)
-        @test length(b.traceheaders) ==  40000
-        @test Float32(b.data[100]) == Float32(0)
+        @test b.fileheader.bfh.ns == 751
+        @test b.traceheaders[1].ns == 751
+        @test size(b.data) == (751, 3300)
+        @test length(b.traceheaders) ==  3300
+        @test Float32(b.data[100]) == -2.2972927f0
 
         b = read_file(s, ["ns"], false)
         @test typeof(b) == SeisIO.SeisBlock{SeisIO.IBMFloat32}
-        @test b.fileheader.bfh.ns == 560
-        @test b.traceheaders[1].ns == 560
-        @test size(b.data) == (560, 40000)
-        @test length(b.traceheaders) ==  40000
-        @test Float32(b.data[100]) == Float32(0)
+        @test b.fileheader.bfh.ns == 751
+        @test b.traceheaders[1].ns == 751
+        @test size(b.data) == (751, 3300)
+        @test length(b.traceheaders) ==  3300
+        @test Float32(b.data[100]) == -2.2972927f0
 
     end
 end
