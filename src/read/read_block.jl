@@ -48,7 +48,6 @@ function read_block!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf::Int, tm
     # Read each trace
     for trace in 1:ntraces
         read_trace!(s, fh.bfh, datatype, tmp_headers, tmp_data, trace, keys, th_b2s)
-        break
     end
 
 end
