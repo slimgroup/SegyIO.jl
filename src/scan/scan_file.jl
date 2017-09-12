@@ -95,7 +95,8 @@ function scan_file(file::String, keys::Array{String, 1};
     while !eof(s)
         scan_shots!(s, mem_chunk, mem_trace, keys, file, scan, fl_eof)
     end
-
+    
+    close(s)
     return SeisCon(fh.bfh.ns, fh.bfh.DataSampleFormat, scan[1:end])
         
 end
