@@ -69,9 +69,6 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
-    # Check for RecSrcScalar
-    in("RecSourceScalar", keys) ? nothing : push!(keys, "RecSourceScalar")
-
     # Pre-allocate
     headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
