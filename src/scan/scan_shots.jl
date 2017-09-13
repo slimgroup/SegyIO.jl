@@ -9,20 +9,21 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     eof(s) ? (fl_eof=true) : nothing
     buf_size = position(seekend(buf)); seekstart(buf)
     ntraces = Int(floor(buf_size/mem_trace))
-    headers = Array{BinaryTraceHeader,1}(ntraces)
-
-    # Get headers from chunk 
-    for i in 1:ntraces
-        headers[i] = read_traceheader(buf, keys, SeisIO.th_b2s)
-        skip(buf, mem_trace-240)
-    end 
-    
-    # Get all requested header vectors
     vals = Dict{String, Array{Int32,1}}()
+
+    # Init empty arrays
     for k in keys
-        tmp = Int32.([getfield((headers[i]), Symbol(k)) for i in 1:ntraces])
-        vals["$k"] = tmp
+        vals["$k"] = Array{Int32,1}(ntraces)
     end # k
+
+    for i in 1:ntraces
+        read_traceheader!(buf,keys)
+        for k in keys
+            tmp = Int32(getfield((SeisIO.blank_th), Symbol(k)))
+            vals["$k"][i] = tmp
+        end # k
+
+    end
 
     # Deliminate to find shots
     sx = vals["SourceX"] 
