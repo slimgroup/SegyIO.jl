@@ -34,4 +34,8 @@ module SeisIO
     include("scan/delim_vector.jl")
     include("scan/find_next_delim.jl")
 
+    # Workspace
+    th_b2s = SeisIO.th_byte2sample()
+    blank_th = BinaryTraceHeader()
+
 end # module

@@ -8,13 +8,12 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     buf = IOBuffer(read(s, mem_chunk)) 
     eof(s) ? (fl_eof=true) : nothing
     buf_size = position(seekend(buf)); seekstart(buf)
-    th_byte2sample = SeisIO.th_byte2sample()
     ntraces = Int(floor(buf_size/mem_trace))
     headers = Array{BinaryTraceHeader,1}(ntraces)
 
     # Get headers from chunk 
     for i in 1:ntraces
-        headers[i] = read_traceheader(buf, keys, th_byte2sample)
+        headers[i] = read_traceheader(buf, keys, SeisIO.th_b2s)
         skip(buf, mem_trace-240)
     end 
     
