@@ -22,6 +22,9 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
+    # Check for RecSrcScalar
+    in("RecSourceScalar", keys) ? nothing : push!(keys, "RecSourceScalar")
+
     # Pre-allocate
     data = Array{datatype,2}(con.ns, prealloc_traces) 
     headers = Array{BinaryTraceHeader,1}(prealloc_traces) 

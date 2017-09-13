@@ -58,12 +58,12 @@ function get_sources(con::SeisCon)
     sx_v = get_header(con, "SourceX")
     sy_v = get_header(con, "SourceY")
     
-    sx_const = all([sx_v[i,1] == sx_v[i,2] for i in 1:size(sx_v)[1]])
-    sy_const = all([sy_v[i,1] == sy_v[i,2] for i in 1:size(sy_v)[1]])
+    sx_const = all([sx_v[i][1] == sx_v[i][2] for i in 1:length(sx_v)])
+    sy_const = all([sy_v[i][1] == sy_v[i][2] for i in 1:length(sy_v)])
     
     if sx_const && sy_const
-        sx = [sx_v[i,1] for i in 1:size(sx_v)[1]]
-        sy = [sy_v[i,1] for i in 1:size(sy_v)[1]]
+        sx = [sx_v[i][1] for i in 1:length(sx_v)]
+        sy = [sy_v[i][1] for i in 1:length(sy_v)]
     else
         throw(error("Source locations are not constistant for all blocks."))
     end
