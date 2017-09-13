@@ -57,10 +57,16 @@ function read_trace!(s::IO, fh::BinaryFileHeader,
     
     nothing
 end
+
 """
 Read a single trace from current position in stream as Float32
 """
-function read_tracedata{DT<:Union{IBMFloat32, Float32}}(s::IO, fh::BinaryFileHeader, dsf::Type{DT})
+function read_tracedata{DT<:IBMFloat32}(s::IO, fh::BinaryFileHeader, dsf::Type{DT})
     read(s, DT, fh.ns)
+end
+
+function read_tracedata{DT<:Float32}(s::IO, fh::BinaryFileHeader, dsf::Type{DT})
+    println("in r_td for Float32")
+    bswap.(read(s, DT, fh.ns))
 end
 
