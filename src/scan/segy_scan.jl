@@ -25,8 +25,9 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::
     endswith(dir, "/") ? nothing : dir *= "/"
     filenames = searchdir(dir, filt)
     files = map(x -> dir*x, filenames)
+    files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files)
+    s = pmap(pool, run_scan, files_sort)
 
     return merge_con(s)
 end
@@ -42,8 +43,9 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, b
         filenames = searchdir(dir, filt)
         append!(files, map(x -> dir*x, filenames))
     end
+    files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files)
+    s = pmap(pool, run_scan, files_sort)
     
     return merge_con(s)
 end
@@ -62,8 +64,9 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1};
     endswith(dir, "/") ? nothing : dir *= "/"
     filenames = searchdir(dir, filt)
     files = map(x -> dir*x, filenames)
+    files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files)
+    s = pmap(run_scan, files_sort)
     
     return merge_con(s)
 end
@@ -84,11 +87,11 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1};
         filenames = searchdir(dir, filt)
         append!(files, map(x -> dir*x, filenames))
     end
+    files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files)
+    s = pmap(pool, run_scan, files_sort)
     
     return merge_con(s)
 end
 
 searchdir(path,filt) = filter(x->contains(x,filt), readdir(path))
-

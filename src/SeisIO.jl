@@ -38,4 +38,7 @@ module SeisIO
     th_b2s = SeisIO.th_byte2sample()
     blank_th = BinaryTraceHeader()
 
+    # Methods
+    include("methods/ordered_pmap.jl")
+
 end # module
