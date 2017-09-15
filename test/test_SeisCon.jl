@@ -19,27 +19,27 @@
 
     @testset "get_header" begin
         @test size(get_header(s, "GroupX")) == (97, 2)
-        @test get_header(s, "GroupX")[1] == 100
+        @test get_header(s, "GroupX")[1] == 2400
         @test get_header(s, "GroupX")[end] == 19900
     end
 
     @testset "get_sources" begin
         @test size(get_sources(s)) == (97, 2)
-        @test get_sources(s)[1] == 400
+        @test get_sources(s)[1] == 8400
         @test get_sources(s)[end] == 0
     end
 
-    @testset "merge_con" begin
-        b = merge_con(s, s)
+    @testset "merge" begin
+        b = merge(s, s)
         @test b.ns == s.ns
         @test b.dsf == s.dsf
         @test length(b) == 194
     end
 
-    @testset "split_con" begin
-        b = split_con(s, 1:10);
-        c = split_con(b, [1; 7; 9]);
-        d = split_con(c, 1);
+    @testset "split" begin
+        b = split(s, 1:10);
+        c = split(b, [1; 7; 9]);
+        d = split(c, 1);
         @test s.blocks[1] === d.blocks[1]
     end
 end

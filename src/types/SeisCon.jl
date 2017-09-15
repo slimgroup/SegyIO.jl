@@ -86,6 +86,8 @@ Merge `con`, a vector of SeisCon objects, into one SeisCon object.
 """
 function merge_con(cons::Array{SeisCon,1})
     
+    warn("merge_con is deprecated, use merge")
+
     # Check similar metadata
     ns = get_confield(cons, :ns)
     dsf = get_confield(cons, :dsf)
@@ -140,6 +142,7 @@ true
 ```
 """
 function split_con{Ti<:Integer}(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}})
+    warn("split_con is deprecated, use split")
     c = SeisCon(s.ns, s.dsf, view(s.blocks, inds)) 
 end
 

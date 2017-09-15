@@ -215,19 +215,24 @@ end
 
 function show(io::IO, Abth::Array{BinaryTraceHeader,1})
     
-    # Show first
-    println("BinaryTraceHeader 1:")
-    for field in fieldnames(BinaryTraceHeader)
-        s = @sprintf "     %30s: %9d" String(field) getfield(Abth[1], field)
-        println(s)
-    end
-    
-    println("\n ... \n")
 
-    # Show last
-    println("BinaryTraceHeader $(length(Abth)):")
-    for field in fieldnames(BinaryTraceHeader)
-        s = @sprintf "     %30s: %9d" String(field) getfield(Abth[end], field)
-        println(s)
+    if length(Abth) == 0
+        println("Empty Traceheaders")
+    else
+        # Show first
+        println("BinaryTraceHeader 1:")
+        for field in fieldnames(BinaryTraceHeader)
+            s = @sprintf "     %30s: %9d" String(field) getfield(Abth[1], field)
+            println(s)
+        end
+        
+        println("\n ... \n")
+
+        # Show last
+        println("BinaryTraceHeader $(length(Abth)):")
+        for field in fieldnames(BinaryTraceHeader)
+            s = @sprintf "     %30s: %9d" String(field) getfield(Abth[end], field)
+            println(s)
+        end
     end
 end

@@ -97,7 +97,6 @@ function scan_file(file::String, keys::Array{String, 1};
     end
     
     close(s)
-    println("Done")
     return SeisCon(fh.bfh.ns, fh.bfh.DataSampleFormat, scan[1:end])
         
 end

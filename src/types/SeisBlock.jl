@@ -2,7 +2,7 @@ import Base.size, Base.length
 
 export SeisBlock, set_header!, set_traceheader!, set_fileheader!, get_header
 
-struct SeisBlock{DT<:Union{IBMFloat32, Float32}}
+mutable struct SeisBlock{DT<:Union{IBMFloat32, Float32}}
     fileheader::FileHeader
     traceheaders::Array{BinaryTraceHeader, 1}
     data::Array{DT,2}

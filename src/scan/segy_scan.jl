@@ -29,7 +29,7 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
     s = pmap(pool, run_scan, files_sort)
 
-    return merge_con(s)
+    return merge(s)
 end
 
 function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, blocksize::Int; 
@@ -47,7 +47,7 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, b
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
     s = pmap(pool, run_scan, files_sort)
     
-    return merge_con(s)
+    return merge(s)
 end
 
 """
@@ -68,7 +68,7 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1};
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
     s = pmap(run_scan, files_sort)
     
-    return merge_con(s)
+    return merge(s)
 end
 
 """
@@ -91,7 +91,7 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1};
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
     s = pmap(pool, run_scan, files_sort)
     
-    return merge_con(s)
+    return merge(s)
 end
 
 searchdir(path,filt) = filter(x->contains(x,filt), readdir(path))
