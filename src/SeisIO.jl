@@ -42,5 +42,8 @@ module SeisIO
     include("methods/ordered_pmap.jl")
     include("methods/merge.jl")
     include("methods/split.jl")
+    include("methods/set_header.jl")
+    include("methods/get_header.jl")
+    include("methods/get_sources.jl")
 
 end # module

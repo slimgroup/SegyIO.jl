@@ -1,7 +1,7 @@
 # SeisCon type definition and methods
 import Base.size, Base.length, Base.getindex
 
-export SeisCon, size, get_sources, getindex, merge_con, split_con
+export SeisCon, size, getindex, merge_con, split_con
 
 struct SeisCon
     ns::Int
@@ -9,68 +9,8 @@ struct SeisCon
     blocks::Array{BlockScan,1}
 end
 
-# Parameters
 size(con::SeisCon) = size(con.blocks)
 length(con::SeisCon) = length(con.blocks)
-
-"""
-    get_header(con::SeisCon, name::String)
-
-Gets the metadata summary, `name`, from every `BlockScan` in `con`.
-Column 1 contains the minimum value of `name` within the block, and Column 2
-contains the maximum value of `name` within the block. Src/Rec scaling is not applied.
-
-To get source coordinate pairs as an array, see `get_sources`. 
-
-# Example
-
-trace = get_header(s, "TraceNumber")
-
-"""
-function get_header(con::SeisCon,name::String)
-    minmax = [con.blocks[i].summary[name] for i in 1:length(con)]
-    I = length(minmax)
-    vals = Array{Int32,2}(I,2)
-    for i in 1:I
-        vals[i,1] = minmax[i][1]
-        vals[i,2] = minmax[i][2]
-    end
-    
-    return vals
-end
-
-"""
-    get_sources(con::SeisCon)
-
-Returns an array of the source location coordinate pairs, NOT the minimum and maximum values.
-Unlike `get_headers`, `get_sources` checks to make sure that SourceX and SourceY are consistant
-throughout each block, that is `min == max`. 
-
-Column 1 of the returned array is SourceX, and Column 2 is SourceY.
-
-# Example
-
-sx = get_sources(s)
-
-"""
-function get_sources(con::SeisCon)
-
-    sx_v = get_header(con, "SourceX")
-    sy_v = get_header(con, "SourceY")
-    
-    sx_const = all([sx_v[i,1] == sx_v[i,2] for i in 1:size(sx_v)[1]])
-    sy_const = all([sy_v[i,1] == sy_v[i,2] for i in 1:size(sy_v)[1]])
-    
-    if sx_const && sy_const
-        sx = [sx_v[i,1] for i in 1:size(sx_v)[1]]
-        sy = [sy_v[i,1] for i in 1:size(sy_v)[1]]
-    else
-        throw(error("Source locations are not constistant for all blocks."))
-    end
-
-    return hcat(sx,sy)
-
-end
 
 function getindex{TA<:Union{Array{<:Integer,1}, Range, Integer}}(con::SeisCon, a::TA) 
     read_con(con, a)
@@ -79,6 +19,8 @@ function getindex(con::SeisCon, a::Colon)
     read_con(con, 1:length(con))
 end
 
+
+### DEPRECATED ### 09/15/2017
 """
     merge_cons(cons::Array{SeisCon,1})
 
