@@ -14,7 +14,7 @@ function read_block_headers!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf:
     datatype = Float32
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
-    elseif con.dsf != 5
+    elseif fh.bfh.DataSampleFormat != 5
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 
@@ -41,7 +41,7 @@ function read_block_headers!(b::BlockScan, ns::Int, dsf::Int, headers)
     datatype = Float32
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
-    elseif con.dsf != 5
+    elseif fh.bfh.DataSampleFormat != 5
         error("Data type not supported ($(fh.bfh.DataSampleFormat))")
     end
 

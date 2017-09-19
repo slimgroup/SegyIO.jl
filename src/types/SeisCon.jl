@@ -20,9 +20,22 @@ function getindex(con::SeisCon, a::Colon)
     read_con(con, 1:length(con))
 end
 
+#=
 function show(s::SeisCon)
+   
+    nblocks = length(s)
+    for block in in 1:n_blocks
+        #file = s.blocks[block].file
+        #file_short = "$(file[1:8]) ... $(file[end-16 : end])"
 
+        # BlockID | File | StartByte | EndByte
+        s = @sprintf "%6s %9d" String(field) getfield(bth, field)
+        println(s)
+    end
+    println("\n")
+    
 end
+=#
 
 
 
