@@ -19,7 +19,7 @@ function get_header(block::SeisBlock, name_in::Union{Symbol, String}; scale::Boo
         out[i] = getfield(block.traceheaders[i], name)
     end
     
-    # Check to apply SrcRecScale
+    # Check, and apply scaling
     is_scalable, scale_name = check_scale(name) 
     if scale && is_scalable
         scaling_factor = get_header(block, scale_name)

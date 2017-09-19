@@ -1,7 +1,7 @@
 # SeisCon type definition and methods
-import Base.size, Base.length, Base.getindex
+import Base.size, Base.length, Base.getindex, Base.show
 
-export SeisCon, size, getindex, merge_con, split_con
+export SeisCon, size, getindex, merge_con, split_con, show
 
 struct SeisCon
     ns::Int
@@ -15,9 +15,15 @@ length(con::SeisCon) = length(con.blocks)
 function getindex{TA<:Union{Array{<:Integer,1}, Range, Integer}}(con::SeisCon, a::TA) 
     read_con(con, a)
 end
+
 function getindex(con::SeisCon, a::Colon) 
     read_con(con, 1:length(con))
 end
+
+function show(s::SeisCon)
+
+end
+
 
 
 ### DEPRECATED ### 09/15/2017

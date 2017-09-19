@@ -20,10 +20,11 @@ in `pool`, the default pool is all workers.
 function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::Int; 
                     chunksize::Int = 1024,
                     pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1)
+                    verbosity::Int = 1,
+                    filter::Bool = true)
     
     endswith(dir, "/") ? nothing : dir *= "/"
-    filenames = searchdir(dir, filt)
+    filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
     files = map(x -> dir*x, filenames)
     files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
@@ -35,12 +36,13 @@ end
 function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, blocksize::Int; 
                     chunksize::Int = 1024,
                     pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1)
+                    verbosity::Int = 1,
+                    filter::Bool = true)
     
     files = Array{String,1}()
     for dir in dirs 
         endswith(dir, "/") ? nothing : dir *= "/"
-        filenames = searchdir(dir, filt)
+        filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
         append!(files, map(x -> dir*x, filenames))
     end
     files_sort = files[sortperm(filesize.(files), rev = true)]
@@ -59,10 +61,11 @@ blocks of continguous traces for each source location.
 function segy_scan(dir::String, filt::String, keys::Array{String,1}; 
                     chunksize::Int = 1024,
                     pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1)
+                    verbosity::Int = 1,
+                    filter::Bool = true)
     
     endswith(dir, "/") ? nothing : dir *= "/"
-    filenames = searchdir(dir, filt)
+    filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
     files = map(x -> dir*x, filenames)
     files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
@@ -79,12 +82,13 @@ Scans all files whose name contains `filt` in each directory of `dir`.
 function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}; 
                     chunksize::Int = 1024,
                     pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1)
+                    verbosity::Int = 1,
+                    filter::Bool = true)
 
     files = Array{String,1}()
     for dir in dirs 
         endswith(dir, "/") ? nothing : dir *= "/"
-        filenames = searchdir(dir, filt)
+        filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
         append!(files, map(x -> dir*x, filenames))
     end
     files_sort = files[sortperm(filesize.(files), rev = true)]
