@@ -127,7 +127,6 @@ Or if the value varies, pass a vector with length *ntraces*.
 
 If a chosen field is present in both BinaryFileHeaders and BinaryTraceHeaders, both will be set.
 
-    d = s[find(x -> 5000<x<10000, src_locations[:,1])]
 
 ## Scanning
 -----
