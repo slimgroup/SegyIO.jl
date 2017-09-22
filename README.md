@@ -135,11 +135,11 @@ If a chosen field is present in both BinaryFileHeaders and BinaryTraceHeaders, b
 
 The scanner is designed to be multi-scale, meaning that your workflow will stay the same regardless of whether you are working on 1 MB or 1TB of data. SeisIO accomplishes this by being: 
 
-1) **Direct** Read only what needs to be read.
+1) **Direct.** Read only what needs to be read.
 
-2) **Seamless** Remove the need to deal with complex filesystems.
+2) **Seamless.** Remove the need to deal with complex filesystems.
 
-3) **Performant** Read, write, and scan at disk speed. 
+3) **Performant.** Read, write, and scan at disk speed. 
 
 A scanned volume provides a higher level of abstraction, removing the need for a user to directly manage individual files. Scanning a file (or a group of files) returns a `SeisCon` object, which contains the necessary information to partition the volume into more managable pieces and directly access these partitions. By default, the scanner will automatically partition the volume when the source location changes.
 
