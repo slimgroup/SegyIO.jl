@@ -133,7 +133,7 @@ If a chosen field is present in both BinaryFileHeaders and BinaryTraceHeaders, b
 
 ### Introduction
 
-The scanner is designed to be multi-scale, meaning that your workflow will stay the same regardless of whether you are working on 1 MB or 1TB. SeisIO does this by being: 
+The scanner is designed to be multi-scale, meaning that your workflow will stay the same regardless of whether you are working on 1 MB or 1TB of data. SeisIO accomplishes this by being: 
 
 1) **Direct** Read only what needs to be read.
 
