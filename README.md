@@ -1,5 +1,5 @@
 # SeisIO.jl
-SeisIO is a Julia package for reading and writing SEGY Rev 1 files. In addition to providing tools for reading/writing entire files, SeisIO provides a scanner that turns SEGY volumes into an object with direct out-of-core access to the underlying data. 
+SeisIO is a Julia package for reading and writing SEGY Rev 1 files. In addition to providing tools for reading/writing entire files, SeisIO provides a parallel scanner that reduces any number of files into a single object with direct out-of-core access to the underlying data. 
 
 ## Installation 
 SeisIO can be installed using the Julia package manager. If you have a Github account, run the following from the Julia REPL:
