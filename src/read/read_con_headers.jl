@@ -24,6 +24,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
     
     # Check for RecSrcScalar
     in("RecSourceScalar", keys) ? nothing : push!(keys, "RecSourceScalar")
+    in("ElevationScalar", keys) ? nothing : push!(keys, "ElevationScalar")
 
     # Pre-allocate
     headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
