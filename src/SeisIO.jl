@@ -19,6 +19,7 @@ module SeisIO
     include("read/read_block_headers.jl")
     include("read/read_con.jl")
     include("read/read_con_headers.jl")
+    include("read/extract_con_headers.jl")
 
     # Writer
     include("write/write_fileheader.jl")
