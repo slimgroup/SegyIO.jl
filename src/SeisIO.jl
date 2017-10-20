@@ -46,5 +46,16 @@ module SeisIO
     include("methods/set_header.jl")
     include("methods/get_header.jl")
     include("methods/get_sources.jl")
+    
+    module Patches
+        
+        using SeisIO, JLD
 
+        # Types
+        include("Patches/InterpRegion.jl")
+        include("Patches/Patch.jl")
+        include("Patches/Zone.jl")
+
+
+    end
 end # module
