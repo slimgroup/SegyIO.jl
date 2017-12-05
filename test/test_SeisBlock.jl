@@ -11,6 +11,7 @@
     @testset "Methods" begin
         b = SeisBlock(rand(Float32,10,10))
         @test size(b) == (10,10)
+        @test length(b) == 10
     end
 
     @testset "set_traceheader" begin
