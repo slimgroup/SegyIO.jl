@@ -19,26 +19,25 @@ The package naturally splits into three parts: reading, writing, and scanning
 
 A working knowledge of the the [SEGY format](https://www.seg.org/Portals/0/SEG/News%20and%20Resources/Technical%20Standards/seg_y_rev1.pdf) will be necessary. 
 
-`segy_scan` is the highest level reading function and acts as the main reading UI. This function is necessary because it decides whether the stream that will be read will be a file pointer or an IOBuffer. The use of IOBuffers are key to SeisIO's performance. A choice was made to favour performance when reading a sebset of the trace headers, which requires unordered reading. All of this jumping around is much faster when done with an IOBuffer. In almost all cases the IOBuffer should be used.
+The package provides two avenues for reading data from a SEGY file. The first of which is reading directly from a file with no a priori information. The reader will use the metadata from the file header to decide how to interpret the rest of the file. This method requires reading each file individually and doesn't allow random access. The second method is to use a SeisCon object to read pre-determined blocks of data out of a file. Both methods make use of the same low level reading functions to interpret blocks of data into trace headers and traces, they just change how that block of data is found. 
+
+`segy_read` is the highest level reading function for reading directly from a file. This function is necessary because it decides whether the stream that will be read will be a file pointer or an IOBuffer. The use of IOBuffers are key to SeisIO's performance. A choice was made to favour performance when reading a sebset of the trace headers, which requires unordered reading. All of this jumping around is much faster when done with an IOBuffer. In almost all cases the IOBuffer should be used.
 
 `read_file` and the downstream reading functions were carefully designed to be agnostic of the stream type, in the hopes that it would be easy in the future to plug in some other stream like an AWS bucket. 
 
 The design of the reader is simply:
 
 * Read the file header to get the data sample format, check for the fixed length trace flag, and get the number of samples.
-
 * Calculate the number of traces in the file
-
 * Pre-allocate memory for the headers and for the data
-
 * Get the trace header `bytes_to_samples` dict
-
 * Read each trace
-
 * Form and return a SeisBlock
-* Hierarchy:  `Read File > Read Chunk > Read Block > Read Trace > Read Trace Header & Trace Data`
+* Hierarchy:  `Read File < Read FileHeader & Read Trace < Read Trace Header & Trace Data`
 
 A `SeisBlock` is an in core data container that contains the fileheader, trace headers, and data from a read. While trace headers are kept seperate, the data is returned as an array to make it easier to work with, since array operations are so common. Methods are provided to get metadata vectors out of the collection of trace headers.
+
+Reading using a SeisCon object skips most of the steps above because all of the necessary information was collected during the scan and stored within the SeisCon object `s`. For example, say you have determined that you want to read the 10th block of data out of the SeisCon object. You can do this by simply calling  `s[10]`, which is the same thing as `read_con(s, 10)`. This will use the 10th BlockScan in `s` to seek to the starting byte of the correct file, and read until the end byte of the block. 
 
 ### Supported Data Types 
 
@@ -73,7 +72,7 @@ The chunk size keyword is used to determine how much of the file is loaded into 
 
 There is a performance benefit to working with a larger chunk size, especially in highly parallel scans, but the main point of setting the chunk size is to cap the peak memory use of the scanner.
 
-Hierarchy: `Scan File > Scan Chunk > Scan Block > Scan Trace > Scan Trace Header & Trace Data`
+Hierarchy: `Scan File < Scan Chunk < Scan Block < Scan Trace`
 
 ### Parallelism 
 

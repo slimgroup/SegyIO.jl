@@ -7,7 +7,7 @@ Return the indicies of the first element for each homogenous section in `x`.
 
 # Example
 ```
-julia> x = vec([1 1 1 2 2 2 2 3 3 3 3]);
+julia> x = vec([1.0 1.0 1.0 2.0 2.0 2.0 2.0 3.0 3.0 3.0 3.0]);
 
 julia> delim_vector(x, 1)
 3-element Array{Int64,1}:
