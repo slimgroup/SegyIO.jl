@@ -50,11 +50,13 @@ function set_header!(block::SeisBlock, name_in::Union{Symbol, String}, x::ET) wh
     # Try setting trace headers
     try
         set_traceheader!(block.traceheaders, name, x_vec)
+    catch
     end
 
     # Try setting file header
     try
         set_fileheader!(block.fileheader.bfh, name, x)
+    catch
     end
 end
 
@@ -66,11 +68,13 @@ function set_header!(block::SeisBlock, name_in::Union{Symbol, String},
     # Try setting trace headers
     try
         set_traceheader!(block.traceheaders, name, x)
+    catch
     end
 
     # Try setting file header
     try
         set_fileheader!(block.fileheader.bfh, name, x)
+    catch
     end
 end
 
