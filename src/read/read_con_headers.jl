@@ -102,16 +102,16 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
     
 end
 
-function read_con_headers{TR<:Range}(con::SeisCon, blocks::TR;
-                                prealloc_traces::Int = 50000)
+function read_con_headers(con::SeisCon, blocks::TR;
+                          prealloc_traces::Int = 50000) where {TR<:Range}
     read_con_headers(con, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con_headers(con::SeisCon, blocks::Integer;
                                 prealloc_traces::Int = 50000)
     read_con_headers(con, [blocks], prealloc_traces = prealloc_traces)
 end
-function read_con_headers{TR<:Range}(con::SeisCon, keys::Array{String,1}, blocks::TR;
-                                prealloc_traces::Int = 50000)
+function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::TR;
+                          prealloc_traces::Int = 50000) where {TR<:Range}
     read_con_headers(con, keys, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Integer;

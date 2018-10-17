@@ -22,7 +22,7 @@ julia> s.blocks[1] === d.blocks[1]
 true
 ```
 """
-function split{Ti<:Integer}(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}})
+function split(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}}) where {Ti<:Integer}
     c = SeisCon(s.ns, s.dsf, view(s.blocks, inds)) 
 end
 
@@ -74,8 +74,8 @@ In this case, because `consume` was set to true, `merge` created `b` by removing
 from `d`. `consume` prevents the duplication of data in memory at the cost of performance,
 memory allocation, and risk.
 """
-function split{Ti<:Integer}(s::SeisBlock, inds::Union{Vector{Ti}, Range{Ti}};
-                                    consume::Bool = false)
+function split(s::SeisBlock, inds::Union{Vector{Ti}, Range{Ti}};
+               consume::Bool = false) where {Ti<:Integer}
     if consume
         c = SeisBlock(s.fileheader, s.traceheaders[inds], s.data[:, inds]) 
         ii = BitArray(size(s.data))

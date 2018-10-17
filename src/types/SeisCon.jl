@@ -12,7 +12,7 @@ end
 size(con::SeisCon) = size(con.blocks)
 length(con::SeisCon) = length(con.blocks)
 
-function getindex{TA<:Union{Array{<:Integer,1}, Range, Integer}}(con::SeisCon, a::TA) 
+function getindex(con::SeisCon, a::TA) where {TA<:Union{Array{<:Integer,1}, Range, Integer}} 
     read_con(con, a)
 end
 
@@ -102,7 +102,7 @@ julia> s.blocks[1] === d.blocks[1]
 true
 ```
 """
-function split_con{Ti<:Integer}(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}})
+function split_con(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}}) where {Ti<:Integer}
     warn("split_con is deprecated, use split")
     c = SeisCon(s.ns, s.dsf, view(s.blocks, inds)) 
 end

@@ -34,9 +34,8 @@ merge(a::SeisCon, b::SeisCon) = merge([a; b])
 
 Merge two SeisBlocks into one.
 """
-function merge{DT<:Union{IBMFloat32, Float32}}(a::SeisBlock{DT}, b::SeisBlock{DT};
-                                                    force::Bool = false,
-                                                    consume::Bool = false)
+function merge(a::SeisBlock{DT}, b::SeisBlock{DT};
+               force::Bool = false, consume::Bool = false) where {DT<:Union{IBMFloat32, Float32}}
    merge([a; b], force = force, consume = consume) 
 end
 
@@ -75,9 +74,8 @@ at the cost of clearing the elements of `blocks`.
     0-element Array{SeisIO.BinaryTraceHeader,1}
 
 """
-function merge{DT<:Union{IBMFloat32, Float32}}(blocks::Vector{SeisBlock{DT}};
-                                                    force::Bool = false,
-                                                    consume::Bool = false)
+function merge(blocks::Vector{SeisBlock{DT}};
+               force::Bool = false, consume::Bool = false) where {DT<:Union{IBMFloat32, Float32}}
 
     # Check common file header
     n = length(blocks)
