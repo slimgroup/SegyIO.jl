@@ -62,10 +62,14 @@ end
 Read a single trace from current position in stream as Float32
 """
 function read_tracedata(s::IO, fh::BinaryFileHeader, dsf::Type{DT}) where {DT<:IBMFloat32}
-    read(s, DT, fh.ns)
+    dummy=Vector{DT}(undef, fh.ns)
+    read!(s, dummy)
+    return dummy
 end
 
 function read_tracedata(s::IO, fh::BinaryFileHeader, dsf::Type{DT}) where {DT<:Float32}
-    bswap.(read(s, DT, fh.ns))
+    dummy=Vector{DT}(undef, fh.ns)
+    read!(s, dummy)
+    return bswap.(dummy)
 end
 
