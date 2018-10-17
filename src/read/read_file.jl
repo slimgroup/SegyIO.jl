@@ -31,8 +31,8 @@ function read_file(s::IO, warn_user::Bool; start_byte::Int = 3600,
     ntraces = Int((end_byte - start_byte)/(240 + fh.bfh.ns*4))
 
     # Preallocate memory
-    headers = Array{BinaryTraceHeader, 1}(ntraces)
-    data = Array{datatype, 2}(fh.bfh.ns, ntraces)
+    headers = Array{BinaryTraceHeader, 1}(undef, ntraces)
+    data = Array{datatype, 2}(undef, fh.bfh.ns, ntraces)
     th_b2s = th_byte2sample()
 
     # Read each trace
@@ -77,8 +77,8 @@ function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool;
     ntraces = Int((end_byte - start_byte)/(240 + fh.bfh.ns*4))
 
     # Preallocate memory
-    headers = Array{BinaryTraceHeader, 1}(ntraces)
-    data = Array{datatype, 2}(fh.bfh.ns, ntraces)
+    headers = Array{BinaryTraceHeader, 1}(undef, ntraces)
+    data = Array{datatype, 2}(undef, fh.bfh.ns, ntraces)
     th_b2s = th_byte2sample()
 
     # Read each trace

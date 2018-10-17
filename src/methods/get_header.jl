@@ -89,7 +89,7 @@ trace = get_header(s, "TraceNumber")
 function get_header(con::SeisCon,name::String)
     minmax = [con.blocks[i].summary[name] for i in 1:length(con)]
     I = length(minmax)
-    vals = Array{Int32,2}(I,2)
+    vals = Array{Int32,2}(undef, I, 2)
     for i in 1:I
         vals[i,1] = minmax[i][1]
         vals[i,2] = minmax[i][2]

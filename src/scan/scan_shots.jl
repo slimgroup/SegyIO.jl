@@ -9,7 +9,7 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     eof(s) ? (fl_eof=true) : nothing
     buf_size = position(seekend(buf)); seekstart(buf)
     ntraces = Int(floor(buf_size/mem_trace))
-    headers = Array{BinaryTraceHeader,1}(ntraces)
+    headers = Array{BinaryTraceHeader,1}(undef, ntraces)
 
     # Get headers from chunk 
     for i in 1:ntraces

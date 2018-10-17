@@ -23,8 +23,8 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
     end
 
     # Pre-allocate
-    data = Array{datatype,2}(con.ns, prealloc_traces) 
-    headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
+    data = Array{datatype,2}(undef, con.ns, prealloc_traces) 
+    headers = Array{BinaryTraceHeader,1}(undef, prealloc_traces) 
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
@@ -89,7 +89,7 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
         isroom = (trace_count + ntraces) <= length(headers)
         if ~isroom
             println("Expanding preallocated memory")
-            data = hcat(data, Array{datatype,2}(con.ns, ntraces+prealloc_traces))
+            data = hcat(data, Array{datatype,2}(undef, con.ns, ntraces+prealloc_traces))
             append!(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
             prealloc_traces *= 2
         end
