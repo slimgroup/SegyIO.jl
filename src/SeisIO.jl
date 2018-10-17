@@ -1,5 +1,9 @@
 module SeisIO
 
+    # what's being used
+    using Distributed
+    using Printf
+
     #Types
     include("types/IBMFloat32.jl")
     include("types/BinaryFileHeader.jl")
