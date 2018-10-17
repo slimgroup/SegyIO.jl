@@ -22,14 +22,14 @@ julia> s.blocks[1] === d.blocks[1]
 true
 ```
 """
-function split(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}}) where {Ti<:Integer}
+function split(s::SeisCon, inds::Union{Vector{Ti}, AbstractRange{Ti}}) where {Ti<:Integer}
     c = SeisCon(s.ns, s.dsf, view(s.blocks, inds)) 
 end
 
 split(s::SeisCon, inds::Integer) = split(s, [inds])
 
 """
-    split{Ti<:Integer}(s::SeisBlock, inds::Union{Vector{Ti}, Range{Ti}};
+    split{Ti<:Integer}(s::SeisBlock, inds::Union{Vector{Ti}, AbstractRange{Ti}};
                                     consume::Bool = false)
 
 Split the 'ind' traces of `s` into a sepretate `SeisBlock` object.
@@ -74,7 +74,7 @@ In this case, because `consume` was set to true, `merge` created `b` by removing
 from `d`. `consume` prevents the duplication of data in memory at the cost of performance,
 memory allocation, and risk.
 """
-function split(s::SeisBlock, inds::Union{Vector{Ti}, Range{Ti}};
+function split(s::SeisBlock, inds::Union{Vector{Ti}, AbstractRange{Ti}};
                consume::Bool = false) where {Ti<:Integer}
     if consume
         c = SeisBlock(s.fileheader, s.traceheaders[inds], s.data[:, inds]) 

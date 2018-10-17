@@ -107,7 +107,7 @@ end
 
 # RANGES & INT
 function read_con(con::SeisCon, blocks::TR;
-                  prealloc_traces::Int = 50000) where {TR<:Range}
+                  prealloc_traces::Int = 50000) where {TR<:AbstractRange}
     read_con(con, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con(con::SeisCon, blocks::Integer;
@@ -115,7 +115,7 @@ function read_con(con::SeisCon, blocks::Integer;
     read_con(con, [blocks], prealloc_traces = prealloc_traces)
 end
 function read_con(con::SeisCon, keys::Array{String,1}, blocks::TR;
-                  prealloc_traces::Int = 50000) where {TR<:Range}
+                  prealloc_traces::Int = 50000) where {TR<:AbstractRange}
     read_con(con, keys, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con(con::SeisCon, keys::Array{String,1}, blocks::Integer;
