@@ -40,9 +40,8 @@ function merge(a::SeisBlock{DT}, b::SeisBlock{DT};
 end
 
 """
-    merge{DT<:Union{IBMFloat32, Float32}}(blocks::Vector{SeisBlock{DT}};
-                                                    force::Bool = false,
-                                                    consume::Bool = false)
+    merge(a::SeisBlock{DT}, b::SeisBlock{DT};
+               force::Bool = false, consume::Bool = false) where {DT<:Union{IBMFloat32, Float32}}
 
 Merge `blocks`, a vector of `SeisBlock` objects into one `SeisBlock` object.
 
