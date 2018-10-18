@@ -89,8 +89,8 @@ function merge(blocks::Vector{SeisBlock{DT}};
         if consume
             append!(bth, blocks[ii].traceheaders[:])
             append!(data, blocks[ii].data[:])
-            (blocks[ii].data = Array{DT}(0,0))
-            (blocks[ii].traceheaders = Array{BinaryTraceHeader}(0))
+            (blocks[ii].data = Array{DT}(undef,0,0))
+            (blocks[ii].traceheaders = Array{BinaryTraceHeader}(undef,0))
         else
             append!(bth, @view blocks[ii].traceheaders[:])
             append!(data, blocks[ii].data[:])
