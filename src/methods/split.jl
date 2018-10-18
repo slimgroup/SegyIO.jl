@@ -29,8 +29,8 @@ end
 split(s::SeisCon, inds::Integer) = split(s, [inds])
 
 """
-    split{Ti<:Integer}(s::SeisBlock, inds::Union{Vector{Ti}, AbstractRange{Ti}};
-                                    consume::Bool = false)
+    split(s::SeisBlock, inds::Union{Vector{Ti}, AbstractRange{Ti}};
+               consume::Bool = false) where {Ti<:Integer}
 
 Split the 'ind' traces of `s` into a sepretate `SeisBlock` object.
 
