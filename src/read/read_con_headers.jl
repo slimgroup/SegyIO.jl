@@ -27,7 +27,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
     in("ElevationScalar", keys) ? nothing : push!(keys, "ElevationScalar")
 
     # Pre-allocate
-    headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
+    headers = Array{BinaryTraceHeader,1}(undef, prealloc_traces) 
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
@@ -45,7 +45,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
             println("Expanding preallocated memory")
             prealloc_traces *= 2
             prealloc_traces += ntraces
-            append!(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+            append!(headers, Array{BinaryTraceHeader,1}(undef, ntraces+prealloc_traces))
         end
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
 
@@ -71,7 +71,7 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
     end
 
     # Pre-allocate
-    headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
+    headers = Array{BinaryTraceHeader,1}(undef, prealloc_traces) 
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
@@ -89,7 +89,7 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
             println("Expanding preallocated memory")
             prealloc_traces *= 2
             prealloc_traces += ntraces
-            append!(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+            append!(headers, Array{BinaryTraceHeader,1}(undef, ntraces+prealloc_traces))
         end
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
 

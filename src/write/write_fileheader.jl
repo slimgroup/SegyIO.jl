@@ -29,7 +29,7 @@ function write_fileheader(s::IO, fh::FileHeader)
     
     ##3260
     # Skip to next block
-    write(s, Array{UInt8,1}(240))
+    write(s, Array{UInt8,1}(undef,240))
     
     ##3500
     # Write second section of assigned values
@@ -39,7 +39,7 @@ function write_fileheader(s::IO, fh::FileHeader)
     
     ##3506
     # Skip to end
-    write(s, Array{UInt8,1}(94))
+    write(s, Array{UInt8,1}(undef,94))
     
     ##3600
 
