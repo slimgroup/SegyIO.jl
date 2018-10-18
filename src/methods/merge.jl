@@ -58,7 +58,7 @@ at the cost of clearing the elements of `blocks`.
     
 # Examples
 
-    julia> s = segy_scan(Pkg.dir("SeisIO")*"/src/data/", "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
+    julia> s = segy_scan(joinpath(dirname(pathof(SeisIO)),"data/"), "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
 
     julia> a = s[1:4]; b = s[5:8];
 

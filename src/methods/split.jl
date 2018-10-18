@@ -46,7 +46,7 @@ If `consume` is true, then the `ind` traces of `s` are REMOVED and placed into t
 
     julia> using SeisIO
 
-    julia> s = segy_scan(Pkg.dir("SeisIO")*"/src/data/", "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
+    julia> s = segy_scan(joinpath(dirname(pathof(SeisIO)),"data/"), "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
 
     julia> d = s[1:length(s)]; @time b = split(d, 1:10000);
       0.005683 seconds (23 allocations: 28.649 MiB, 17.99% gc time)
