@@ -82,7 +82,7 @@ function show(io::IO, bfh::BinaryFileHeader)
     
     println("BinaryFileHeader:")
 
-    for field in fieldnames(BinaryFileHeader)
+    for field in fieldnames(typeof(BinaryFileHeader))
         s = @sprintf "     %30s: %9d" String(field) getfield(bfh, field)
         println(s)
     end

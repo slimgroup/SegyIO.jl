@@ -23,7 +23,7 @@ function write_fileheader(s::IO, fh::FileHeader)
     
     ##3200
     # Write first section of assigned values
-    for field in fieldnames(fh.bfh)[1:27]
+    for field in fieldnames(typeof(fh.bfh))[1:27]
         write(s, bswap(getfield(fh.bfh, field)))
     end
     
@@ -33,7 +33,7 @@ function write_fileheader(s::IO, fh::FileHeader)
     
     ##3500
     # Write second section of assigned values
-    for field in fieldnames(fh.bfh)[28:end]
+    for field in fieldnames(typeof(fh.bfh))[28:end]
         write(s, bswap(getfield(fh.bfh, field)))
     end
     

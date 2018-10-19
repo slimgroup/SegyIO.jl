@@ -205,7 +205,7 @@ end
 function show(io::IO, bth::BinaryTraceHeader)
     
     println("BinaryTraceHeader:")
-    for field in fieldnames(BinaryTraceHeader)
+    for field in fieldnames(typeof(BinaryTraceHeader))
         s = @sprintf "     %30s: %9d" String(field) getfield(bth, field)
         println(s)
     end
@@ -221,7 +221,7 @@ function show(io::IO, Abth::Array{BinaryTraceHeader,1})
     else
         # Show first
         println("BinaryTraceHeader 1:")
-        for field in fieldnames(BinaryTraceHeader)
+        for field in fieldnames(typeof(BinaryTraceHeader))
             s = @sprintf "     %30s: %9d" String(field) getfield(Abth[1], field)
             println(s)
         end
@@ -230,7 +230,7 @@ function show(io::IO, Abth::Array{BinaryTraceHeader,1})
 
         # Show last
         println("BinaryTraceHeader $(length(Abth)):")
-        for field in fieldnames(BinaryTraceHeader)
+        for field in fieldnames(typeof(BinaryTraceHeader))
             s = @sprintf "     %30s: %9d" String(field) getfield(Abth[end], field)
             println(s)
         end
