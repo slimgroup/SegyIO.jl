@@ -104,6 +104,6 @@ end
 
 function ==(a::FileHeader, b::FileHeader)
     match_th = a.th == b.th
-    match_bfh = [getfield(a.bfh, field) == getfield(b.bfh,field) for field in fieldnames(typeof(BinaryFileHeader))]
+    match_bfh = [getfield(a.bfh, field) == getfield(b.bfh,field) for field in fieldnames(BinaryFileHeader)]
     return match_th && all(match_bfh)
 end
