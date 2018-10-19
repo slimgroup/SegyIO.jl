@@ -26,7 +26,7 @@ function get_sources(con::SeisCon)
         sx = [sx_v[i,1] for i in 1:size(sx_v)[1]]
         sy = [sy_v[i,1] for i in 1:size(sy_v)[1]]
     else
-        throw(error("Source locations are not constistant for all blocks."))
+        @error "Source locations are not constistant for all blocks."
     end
 
     return hcat(sx,sy)

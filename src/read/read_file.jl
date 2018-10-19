@@ -19,11 +19,11 @@ function read_file(s::IO, warn_user::Bool; start_byte::Int = 3600,
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
     elseif fh.bfh.DataSampleFormat != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     # Check fixed length trace flag
-    (fh.bfh.FixedLengthTraceFlag!=1 & warn_user) && warn("Fixed length trace flag set in stream: $s")
+    (fh.bfh.FixedLengthTraceFlag!=1 & warn_user) && @warn "Fixed length trace flag set in stream: $s"
     
     ## Check for extended text header
 
@@ -65,11 +65,11 @@ function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool;
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
     else
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     # Check fixed length trace flag
-    (fh.bfh.FixedLengthTraceFlag!=1 & warn_user) && warn("Fixed length trace flag set in stream: $s")
+    (fh.bfh.FixedLengthTraceFlag!=1 & warn_user) && @warn "Fixed length trace flag set in stream: $s"
     
     ## Check for extended text header
 

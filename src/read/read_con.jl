@@ -12,14 +12,14 @@ If preallocated memory fills, it will be expanded again by 'prealloc_traces'.
 function read_con(con::SeisCon, blocks::Array{Int,1}; 
                                 prealloc_traces::Int = 50000)
     nblocks = length(blocks)
-    maximum(blocks)>length(con) ? throw(error("Call for block $(maximum(blocks)) in a container with $(length(con)) blocks.")) : nothing
+    if maximum(blocks)>length(con) @error "Call for block $(maximum(blocks)) in a container with $(length(con)) blocks." end
 
     # Check dsf
     datatype = Float32
     if con.dsf == 1
         datatype = IBMFloat32
     elseif con.dsf != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     # Pre-allocate
@@ -65,7 +65,7 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
     if con.dsf == 1
         datatype = IBMFloat32
     elseif con.dsf != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     # Check for RecSrcScalar

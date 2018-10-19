@@ -19,7 +19,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
     if con.dsf == 1
         datatype = IBMFloat32
     elseif con.dsf != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
     
     # Check for RecSrcScalar
@@ -67,7 +67,7 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
     if con.dsf == 1
         datatype = IBMFloat32
     elseif con.dsf != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     # Pre-allocate

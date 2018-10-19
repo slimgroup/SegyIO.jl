@@ -17,7 +17,7 @@ function merge(cons::Array{SeisCon,1})
         d = [cons[i].blocks for i in 1:length(cons)]
         return SeisCon(ns[1], dsf[1], vcat(d...))
     else
-        throw(error("Dissimilar metadata, cannot merge"))
+        @error "Dissimilar metadata, cannot merge"
     end
 end
 
@@ -79,7 +79,7 @@ function merge(blocks::Vector{SeisBlock{DT}};
     # Check common file header
     n = length(blocks)
     if !force && !all([blocks[i].fileheader == blocks[i+1].fileheader for i in 1:n-1])
-        throw(error("Fileheaders do not match for all blocks, use kw force=true to ignore"))
+        @error "Fileheaders do not match for all blocks, use kw force=true to ignore"
     end
 
     fh = blocks[1].fileheader
