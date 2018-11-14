@@ -54,7 +54,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
         trace_count += ntraces
     end
 
-    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(0,0))
+    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(undef,0,0))
     
 end
 
@@ -98,7 +98,7 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
         trace_count += ntraces
     end
 
-    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(0,0))
+    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(undef,0,0))
     
 end
 
