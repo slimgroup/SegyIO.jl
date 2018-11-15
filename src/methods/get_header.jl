@@ -61,10 +61,10 @@ function check_scale(sym::Symbol)
           SourceWaterDepth             
           GroupWaterDepth"
 
-    if contains(recsrc_str, String(sym)) 
+    if occursin(String(sym), recsrc_str) 
         recsrc = true
         scale_name = :RecSourceScalar
-    elseif contains(el_str, String(sym)) 
+    elseif occursin(String(sym), el_str) 
         el = true
         scale_name = :ElevationScalar
     end
