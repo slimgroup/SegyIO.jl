@@ -7,7 +7,7 @@ A video demonstrating the package's capabilities [has been made available here.]
 SeisIO can be installed using the Julia package manager. Run the following from the Julia REPL:
 
 ```
-Pkg.add(PackageSpec(url="https://github.com/slimgroup/SeisIO.jl.git",rev="v07-devel"))
+Pkg.add(PackageSpec(url="https://github.com/slimgroup/SeisIO.jl.git",rev="master"))
 ```
 
 or with GitHub account (and SSH keys registered) for full developer access:
