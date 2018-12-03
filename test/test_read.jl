@@ -1,6 +1,6 @@
 # Test reading component of SeisIO
 
-s = IOBuffer(read(Pkg.dir("SeisIO")*"/src/data/overthrust_2D_shot_1_20.segy"))
+global s = IOBuffer(read(joinpath(dirname(pathof(SeisIO)),"data/overthrust_2D_shot_1_20.segy")))
 
 @testset "read" begin
 

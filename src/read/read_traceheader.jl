@@ -113,12 +113,12 @@ function read_traceheader(s::IO, keys::Array{String,1}, th_byte2sample::Dict{Str
     return traceheader
 end
 
-function updateTH_b!{FT<:Number}(s::IO, th::BinaryTraceHeader, field::FT, sym::Symbol)
+function updateTH_b!(s::IO, th::BinaryTraceHeader, field::FT, sym::Symbol) where {FT<:Number}
     val = bswap(read(s, FT))::FT
     setfield!(th, sym, val)
 end
 
-function updateTH!{FT<:Number}(s::IO, th::BinaryTraceHeader, field::FT, sym::Symbol)
+function updateTH!(s::IO, th::BinaryTraceHeader, field::FT, sym::Symbol) where {FT<:Number}
     val = read(s, FT)::FT
     setfield!(th, sym, val)
 end

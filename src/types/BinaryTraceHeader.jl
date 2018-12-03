@@ -1,6 +1,6 @@
 export BinaryTraceHeader, th_byte2sample
 
-type BinaryTraceHeader
+mutable struct BinaryTraceHeader
     TraceNumWithinLine                 ::Int32
     TraceNumWithinFile                 ::Int32
     FieldRecord                        ::Int32

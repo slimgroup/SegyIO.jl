@@ -17,7 +17,7 @@ function merge(cons::Array{SeisCon,1})
         d = [cons[i].blocks for i in 1:length(cons)]
         return SeisCon(ns[1], dsf[1], vcat(d...))
     else
-        throw(error("Dissimilar metadata, cannot merge"))
+        @error "Dissimilar metadata, cannot merge"
     end
 end
 
@@ -34,16 +34,14 @@ merge(a::SeisCon, b::SeisCon) = merge([a; b])
 
 Merge two SeisBlocks into one.
 """
-function merge{DT<:Union{IBMFloat32, Float32}}(a::SeisBlock{DT}, b::SeisBlock{DT};
-                                                    force::Bool = false,
-                                                    consume::Bool = false)
+function merge(a::SeisBlock{DT}, b::SeisBlock{DT};
+               force::Bool = false, consume::Bool = false) where {DT<:Union{IBMFloat32, Float32}}
    merge([a; b], force = force, consume = consume) 
 end
 
 """
-    merge{DT<:Union{IBMFloat32, Float32}}(blocks::Vector{SeisBlock{DT}};
-                                                    force::Bool = false,
-                                                    consume::Bool = false)
+    merge(a::SeisBlock{DT}, b::SeisBlock{DT};
+               force::Bool = false, consume::Bool = false) where {DT<:Union{IBMFloat32, Float32}}
 
 Merge `blocks`, a vector of `SeisBlock` objects into one `SeisBlock` object.
 
@@ -60,7 +58,7 @@ at the cost of clearing the elements of `blocks`.
     
 # Examples
 
-    julia> s = segy_scan(Pkg.dir("SeisIO")*"/src/data/", "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
+    julia> s = segy_scan(joinpath(dirname(pathof(SeisIO)),"data/"), "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
 
     julia> a = s[1:4]; b = s[5:8];
 
@@ -75,14 +73,13 @@ at the cost of clearing the elements of `blocks`.
     0-element Array{SeisIO.BinaryTraceHeader,1}
 
 """
-function merge{DT<:Union{IBMFloat32, Float32}}(blocks::Vector{SeisBlock{DT}};
-                                                    force::Bool = false,
-                                                    consume::Bool = false)
+function merge(blocks::Vector{SeisBlock{DT}};
+               force::Bool = false, consume::Bool = false) where {DT<:Union{IBMFloat32, Float32}}
 
     # Check common file header
     n = length(blocks)
     if !force && !all([blocks[i].fileheader == blocks[i+1].fileheader for i in 1:n-1])
-        throw(error("Fileheaders do not match for all blocks, use kw force=true to ignore"))
+        @error "Fileheaders do not match for all blocks, use kw force=true to ignore"
     end
 
     fh = blocks[1].fileheader
@@ -92,8 +89,8 @@ function merge{DT<:Union{IBMFloat32, Float32}}(blocks::Vector{SeisBlock{DT}};
         if consume
             append!(bth, blocks[ii].traceheaders[:])
             append!(data, blocks[ii].data[:])
-            (blocks[ii].data = Array{DT}(0,0))
-            (blocks[ii].traceheaders = Array{BinaryTraceHeader}(0))
+            (blocks[ii].data = Array{DT}(undef,0,0))
+            (blocks[ii].traceheaders = Array{BinaryTraceHeader}(undef,0))
         else
             append!(bth, @view blocks[ii].traceheaders[:])
             append!(data, blocks[ii].data[:])

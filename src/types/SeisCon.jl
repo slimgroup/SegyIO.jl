@@ -12,7 +12,7 @@ end
 size(con::SeisCon) = size(con.blocks)
 length(con::SeisCon) = length(con.blocks)
 
-function getindex{TA<:Union{Array{<:Integer,1}, Range, Integer}}(con::SeisCon, a::TA) 
+function getindex(con::SeisCon, a::TA) where {TA<:Union{Array{<:Integer,1}, AbstractRange, Integer}} 
     read_con(con, a)
 end
 
@@ -47,7 +47,7 @@ Merge `con`, a vector of SeisCon objects, into one SeisCon object.
 """
 function merge_con(cons::Array{SeisCon,1})
     
-    warn("merge_con is deprecated, use merge")
+    @warn "merge_con is deprecated, use merge"
 
     # Check similar metadata
     ns = get_confield(cons, :ns)
@@ -57,7 +57,7 @@ function merge_con(cons::Array{SeisCon,1})
         d = [cons[i].blocks for i in 1:length(cons)]
         return SeisCon(ns[1], dsf[1], vcat(d...))
     else
-        throw(error("Dissimilar metadata, cannot merge"))
+        @error "Dissimilar metadata, cannot merge"
     end
 end
 
@@ -102,8 +102,8 @@ julia> s.blocks[1] === d.blocks[1]
 true
 ```
 """
-function split_con{Ti<:Integer}(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}})
-    warn("split_con is deprecated, use split")
+function split_con(s::SeisCon, inds::Union{Vector{Ti}, AbstractRange{Ti}}) where {Ti<:Integer}
+    @warn "split_con is deprecated, use split"
     c = SeisCon(s.ns, s.dsf, view(s.blocks, inds)) 
 end
 

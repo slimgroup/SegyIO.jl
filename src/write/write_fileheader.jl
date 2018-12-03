@@ -3,11 +3,11 @@ export write_fileheader
 function write_fileheader(s::IO, fh::FileHeader)
     
     # Check text header length
-    sizeof(fh.th) > 3200 ? throw(error("Text Header longer than 3200 bytes")) : false
+    if sizeof(fh.th) > 3200 @error "Text Header longer than 3200 bytes" end
 
     # Check dsf
     if fh.bfh.DataSampleFormat != 5
-        warn("DataSampleFormat not supported for writing. Attempting to convert to IEEE Float32")
+        @warn "DataSampleFormat not supported for writing. Attempting to convert to IEEE Float32"
         fh.bfh.DataSampleFormat = 5
     end
     
@@ -23,23 +23,23 @@ function write_fileheader(s::IO, fh::FileHeader)
     
     ##3200
     # Write first section of assigned values
-    for field in fieldnames(fh.bfh)[1:27]
+    for field in fieldnames(typeof(fh.bfh))[1:27]
         write(s, bswap(getfield(fh.bfh, field)))
     end
     
     ##3260
     # Skip to next block
-    write(s, Array{UInt8,1}(240))
+    write(s, Array{UInt8,1}(undef,240))
     
     ##3500
     # Write second section of assigned values
-    for field in fieldnames(fh.bfh)[28:end]
+    for field in fieldnames(typeof(fh.bfh))[28:end]
         write(s, bswap(getfield(fh.bfh, field)))
     end
     
     ##3506
     # Skip to end
-    write(s, Array{UInt8,1}(94))
+    write(s, Array{UInt8,1}(undef,94))
     
     ##3600
 

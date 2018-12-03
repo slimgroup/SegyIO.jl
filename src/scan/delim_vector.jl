@@ -38,7 +38,7 @@ julia> @btime delim_vector(x,100000)
 """
 function delim_vector(x::AbstractVector, probe_length::Int)
 
-    delims = Array{Int,1}(1)
+    delims = Array{Int,1}(undef, 1)
     delims[1] = 1
     n = length(x)
 

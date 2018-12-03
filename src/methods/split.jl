@@ -22,15 +22,15 @@ julia> s.blocks[1] === d.blocks[1]
 true
 ```
 """
-function split{Ti<:Integer}(s::SeisCon, inds::Union{Vector{Ti}, Range{Ti}})
+function split(s::SeisCon, inds::Union{Vector{Ti}, AbstractRange{Ti}}) where {Ti<:Integer}
     c = SeisCon(s.ns, s.dsf, view(s.blocks, inds)) 
 end
 
 split(s::SeisCon, inds::Integer) = split(s, [inds])
 
 """
-    split{Ti<:Integer}(s::SeisBlock, inds::Union{Vector{Ti}, Range{Ti}};
-                                    consume::Bool = false)
+    split(s::SeisBlock, inds::Union{Vector{Ti}, AbstractRange{Ti}};
+               consume::Bool = false) where {Ti<:Integer}
 
 Split the 'ind' traces of `s` into a sepretate `SeisBlock` object.
 
@@ -46,7 +46,7 @@ If `consume` is true, then the `ind` traces of `s` are REMOVED and placed into t
 
     julia> using SeisIO
 
-    julia> s = segy_scan(Pkg.dir("SeisIO")*"/src/data/", "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
+    julia> s = segy_scan(joinpath(dirname(pathof(SeisIO)),"data/"), "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
 
     julia> d = s[1:length(s)]; @time b = split(d, 1:10000);
       0.005683 seconds (23 allocations: 28.649 MiB, 17.99% gc time)
@@ -74,8 +74,8 @@ In this case, because `consume` was set to true, `merge` created `b` by removing
 from `d`. `consume` prevents the duplication of data in memory at the cost of performance,
 memory allocation, and risk.
 """
-function split{Ti<:Integer}(s::SeisBlock, inds::Union{Vector{Ti}, Range{Ti}};
-                                    consume::Bool = false)
+function split(s::SeisBlock, inds::Union{Vector{Ti}, AbstractRange{Ti}};
+               consume::Bool = false) where {Ti<:Integer}
     if consume
         c = SeisBlock(s.fileheader, s.traceheaders[inds], s.data[:, inds]) 
         ii = BitArray(size(s.data))

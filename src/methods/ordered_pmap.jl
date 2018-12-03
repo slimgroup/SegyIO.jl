@@ -5,7 +5,7 @@ function ordered_pmap(pool::WorkerPool, f, list)
     pids = pool.workers
     np = length(pids)
     n = length(list)
-    results = Vector{Any}(n)
+    results = Vector{Any}(undef,n)
     i = 1
     nextidx() = (idx=i; i+=1; idx)
     @sync begin

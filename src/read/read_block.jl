@@ -15,7 +15,7 @@ function read_block!(b::BlockScan, ns::Int, dsf::Int, tmp_data, tmp_headers)
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
     elseif fh.bfh.DataSampleFormat != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     th_b2s = th_byte2sample()
@@ -41,7 +41,7 @@ function read_block!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf::Int, tm
     if fh.bfh.DataSampleFormat == 1
         datatype = IBMFloat32
     elseif fh.bfh.DataSampleFormat != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     th_b2s = th_byte2sample()

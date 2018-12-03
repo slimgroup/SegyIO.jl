@@ -2,7 +2,7 @@ import Base.show
 
 export BinaryFileHeader, fh_byte2sample, show
 
-type BinaryFileHeader
+mutable struct BinaryFileHeader
     Job                                  :: Int32
     Line                                 :: Int32
     Reel                                 :: Int32

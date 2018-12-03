@@ -33,7 +33,7 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
     mem_block = blocksize*mem_trace
     ntraces_file = Int((fsize - 3600)/mem_trace)
     nblocks_file = Int(ceil(ntraces_file/blocksize))
-    scan = Array{BlockScan,1}(nblocks_file)
+    scan = Array{BlockScan,1}(undef, nblocks_file)
     count = 1
 
     # Blocks to load per chunk
@@ -86,7 +86,7 @@ function scan_file(file::String, keys::Array{String, 1};
     fsize = filesize(file)
     mem_trace = 240 + fh.bfh.ns*4
     ntraces_file = Int((fsize - 3600)/mem_trace)
-    scan = Array{BlockScan,1}(0)
+    scan = Array{BlockScan,1}(undef, 0)
     seek(s, 3600)
     traces_per_chunk = Int(floor(chunksize*1024^2/mem_trace))
 

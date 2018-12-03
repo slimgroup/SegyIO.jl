@@ -98,4 +98,4 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1};
     return merge(s)
 end
 
-searchdir(path,filt) = filter(x->contains(x,filt), readdir(path))
+searchdir(path,filt) = filter(x->occursin(filt,x), readdir(path))

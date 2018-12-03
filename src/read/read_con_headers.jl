@@ -19,7 +19,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
     if con.dsf == 1
         datatype = IBMFloat32
     elseif con.dsf != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
     
     # Check for RecSrcScalar
@@ -27,7 +27,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
     in("ElevationScalar", keys) ? nothing : push!(keys, "ElevationScalar")
 
     # Pre-allocate
-    headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
+    headers = Array{BinaryTraceHeader,1}(undef, prealloc_traces) 
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
@@ -45,7 +45,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
             println("Expanding preallocated memory")
             prealloc_traces *= 2
             prealloc_traces += ntraces
-            append!(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+            append!(headers, Array{BinaryTraceHeader,1}(undef, ntraces+prealloc_traces))
         end
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
 
@@ -54,7 +54,7 @@ function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Array{Int
         trace_count += ntraces
     end
 
-    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(0,0))
+    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(undef,0,0))
     
 end
 
@@ -67,11 +67,11 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
     if con.dsf == 1
         datatype = IBMFloat32
     elseif con.dsf != 5
-        error("Data type not supported ($(fh.bfh.DataSampleFormat))")
+        @error "Data type not supported ($(fh.bfh.DataSampleFormat))"
     end
 
     # Pre-allocate
-    headers = Array{BinaryTraceHeader,1}(prealloc_traces) 
+    headers = Array{BinaryTraceHeader,1}(undef, prealloc_traces) 
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
@@ -89,7 +89,7 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
             println("Expanding preallocated memory")
             prealloc_traces *= 2
             prealloc_traces += ntraces
-            append!(headers, Array{BinaryTraceHeader,1}(ntraces+prealloc_traces))
+            append!(headers, Array{BinaryTraceHeader,1}(undef, ntraces+prealloc_traces))
         end
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
 
@@ -98,20 +98,20 @@ function read_con_headers(con::SeisCon, blocks::Array{Int,1};
         trace_count += ntraces
     end
 
-    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(0,0))
+    return SeisBlock{datatype}(fh, headers[1:trace_count], Array{datatype,2}(undef,0,0))
     
 end
 
-function read_con_headers{TR<:Range}(con::SeisCon, blocks::TR;
-                                prealloc_traces::Int = 50000)
+function read_con_headers(con::SeisCon, blocks::TR;
+                          prealloc_traces::Int = 50000) where {TR<:AbstractRange}
     read_con_headers(con, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con_headers(con::SeisCon, blocks::Integer;
                                 prealloc_traces::Int = 50000)
     read_con_headers(con, [blocks], prealloc_traces = prealloc_traces)
 end
-function read_con_headers{TR<:Range}(con::SeisCon, keys::Array{String,1}, blocks::TR;
-                                prealloc_traces::Int = 50000)
+function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::TR;
+                          prealloc_traces::Int = 50000) where {TR<:AbstractRange}
     read_con_headers(con, keys, Array(blocks), prealloc_traces = prealloc_traces)
 end
 function read_con_headers(con::SeisCon, keys::Array{String,1}, blocks::Integer;

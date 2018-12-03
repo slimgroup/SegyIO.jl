@@ -6,7 +6,7 @@ function scan_block(buf::IO, mem_block::Int, mem_trace::Int, keys::Array{String,
     # Calc info about this block
     startbyte = position(buf) + chunk_start
     ntraces_block = Int(mem_block/mem_trace)
-    headers = Array{BinaryTraceHeader,1}(ntraces_block)
+    headers = Array{BinaryTraceHeader,1}(undef, ntraces_block)
     count = 0    
 
     # Read all headers and record end byte

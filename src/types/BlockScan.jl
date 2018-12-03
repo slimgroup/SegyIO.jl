@@ -1,6 +1,6 @@
 export BlockScan
 
-type BlockScan
+mutable struct BlockScan
     file::String
     startbyte::Int
     endbyte::Int
