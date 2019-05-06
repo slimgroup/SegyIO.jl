@@ -1,0 +1,8 @@
+name = "SeisIO"
+uuid = "7f75f292-7034-11e9-3579-f32821507df7"
+authors = ["pwitte3 "]
+version = "0.1.0"
+
+[deps]
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
