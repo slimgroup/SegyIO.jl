@@ -1,6 +1,8 @@
 # SeisIO.jl
 SeisIO is a Julia package for reading and writing SEGY Rev 1 files. In addition to providing tools for reading/writing entire files, SeisIO provides a parallel scanner that reduces any number of files into a single object with direct out-of-core access to the underlying data. 
 
+[![Build Status](https://travis-ci.org/slimgroup/SeisIO.jl.svg?branch=master)](https://travis-ci.org/slimgroup/SeisIO.jl)
+
 A video demonstrating the package's capabilities [has been made available here.](https://www.youtube.com/watch?v=tx530QOPeZo&feature=youtu.be)
 
 ## Installation 
