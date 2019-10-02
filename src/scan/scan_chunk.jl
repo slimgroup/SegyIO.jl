@@ -9,7 +9,7 @@ function scan_chunk!(s::IO, max_blocks_per_chunk::Int, mem_block::Int, mem_trace
     buf_size = position(seekend(buf))
     seekstart(buf)
     nblocks_chunk = Int(ceil(buf_size/mem_block))
-    th_byte2sample = SeisIO.th_byte2sample()
+    th_byte2sample = SegyIO.th_byte2sample()
 
     # Scan all blocks in this chunk
     for b in 1:nblocks_chunk

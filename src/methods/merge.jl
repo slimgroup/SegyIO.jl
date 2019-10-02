@@ -60,7 +60,7 @@ at the cost of clearing the elements of `blocks`.
     
 # Examples
 
-    julia> s = segy_scan(Pkg.dir("SeisIO")*"/src/data/", "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
+    julia> s = segy_scan(Pkg.dir("SegyIO")*"/src/data/", "overthrust", ["GroupX"; "GroupY"], verbosity = 0);
 
     julia> a = s[1:4]; b = s[5:8];
 
@@ -72,7 +72,7 @@ at the cost of clearing the elements of `blocks`.
     julia> c = merge([a; b], consume = true);
 
     julia> a.traceheaders
-    0-element Array{SeisIO.BinaryTraceHeader,1}
+    0-element Array{SegyIO.BinaryTraceHeader,1}
 
 """
 function merge{DT<:Union{IBMFloat32, Float32}}(blocks::Vector{SeisBlock{DT}};

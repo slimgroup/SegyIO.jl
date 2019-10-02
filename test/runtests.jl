@@ -1,4 +1,4 @@
-using SeisIO
+using SegyIO
 using Base.Test
 
 include("test_read.jl")
