@@ -1,4 +1,4 @@
-module SeisIO
+module SegyIO
 
     # what's being used
     using Distributed
@@ -40,7 +40,7 @@ module SeisIO
     include("scan/find_next_delim.jl")
 
     # Workspace
-    th_b2s = SeisIO.th_byte2sample()
+    th_b2s = SegyIO.th_byte2sample()
     blank_th = BinaryTraceHeader()
 
     # Methods

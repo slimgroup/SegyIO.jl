@@ -1,6 +1,6 @@
-# Test reading component of SeisIO
+# Test reading component of SegyIO
 
-global s = IOBuffer(read(joinpath(dirname(pathof(SeisIO)),"data/overthrust_2D_shot_1_20.segy")))
+global s = IOBuffer(read(joinpath(dirname(pathof(SegyIO)),"data/overthrust_2D_shot_1_20.segy")))
 
 @testset "read" begin
 
@@ -8,25 +8,25 @@ global s = IOBuffer(read(joinpath(dirname(pathof(SeisIO)),"data/overthrust_2D_sh
     @testset "read_fileheader" begin
        
         fh = read_fileheader(s)
-        @test typeof(fh) == SeisIO.FileHeader 
+        @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == 751
         @test fh.bfh.Job == 1
 
         fh = read_fileheader(s, ["ns"; "Job"])
-        @test typeof(fh) == SeisIO.FileHeader 
+        @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == 751
         @test fh.bfh.Job == 1
 
         fh = read_fileheader(s, bigendian = false )
-        @test typeof(fh) == SeisIO.FileHeader 
+        @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == -4350
         @test fh.bfh.Job == 16777216
 
         fh = read_fileheader(s, ["ns"; "Job"], bigendian = false )
-        @test typeof(fh) == SeisIO.FileHeader 
+        @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == -4350
         @test fh.bfh.Job == 16777216
@@ -71,7 +71,7 @@ global s = IOBuffer(read(joinpath(dirname(pathof(SeisIO)),"data/overthrust_2D_sh
     @testset "read_file" begin
 
         b = read_file(s, false)
-        @test typeof(b) == SeisIO.SeisBlock{SeisIO.IBMFloat32}
+        @test typeof(b) == SegyIO.SeisBlock{SegyIO.IBMFloat32}
         @test b.fileheader.bfh.ns == 751
         @test b.traceheaders[1].ns == 751
         @test size(b.data) == (751, 3300)
@@ -79,7 +79,7 @@ global s = IOBuffer(read(joinpath(dirname(pathof(SeisIO)),"data/overthrust_2D_sh
         @test Float32(b.data[100]) == -2.2972927f0
 
         b = read_file(s, ["ns"], false)
-        @test typeof(b) == SeisIO.SeisBlock{SeisIO.IBMFloat32}
+        @test typeof(b) == SegyIO.SeisBlock{SegyIO.IBMFloat32}
         @test b.fileheader.bfh.ns == 751
         @test b.traceheaders[1].ns == 751
         @test size(b.data) == (751, 3300)

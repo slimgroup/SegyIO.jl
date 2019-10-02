@@ -1,4 +1,4 @@
-using SeisIO
+using SegyIO
 using Test
 
 include("test_read.jl")

@@ -14,6 +14,6 @@ notifications:
 
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'using SeisIO; cd(dirname(dirname(pathof(SeisIO)))); using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e 'using SegyIO; cd(dirname(dirname(pathof(SegyIO)))); using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   # push coverage results to Codecov
-  - julia -e 'using SeisIO; cd(dirname(dirname(pathof(SeisIO)))); using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'using SegyIO; cd(dirname(dirname(pathof(SegyIO)))); using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'

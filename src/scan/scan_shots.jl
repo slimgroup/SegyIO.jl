@@ -13,7 +13,7 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
 
     # Get headers from chunk 
     for i in 1:ntraces
-        headers[i] = read_traceheader(buf, keys, SeisIO.th_b2s)
+        headers[i] = read_traceheader(buf, keys, SegyIO.th_b2s)
         skip(buf, mem_trace-240)
     end 
     

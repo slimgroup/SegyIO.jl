@@ -1,4 +1,4 @@
-# SeisIO Demo
+# SegyIO Demo
 ---
 
 #### The Dataset
@@ -12,11 +12,11 @@
 
 #### Scanning
 
-    julia> using SeisIO, PyPlot, JLD
+    julia> using SegyIO, PyPlot, JLD
 
     julia> s = segy_scan("/data/slim/data/WesternGeco/3D_Coil_data/common", "WG_Columbus_Geco_Eagle", ["GroupX"; "GroupY"], chunksize = 40*1024)
 
-    julia> s = load("/scratch/slim/shared/klensink/SeisIO/WG_scan.jld", "s");
+    julia> s = load("/scratch/slim/shared/klensink/SegyIO/WG_scan.jld", "s");
 
     julia> lookup_table_size = Base.summarysize(s)/1000^2
     110.791044
