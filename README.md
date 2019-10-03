@@ -5,18 +5,28 @@ SegyIO is a Julia package for reading and writing SEGY Rev 1 files. In addition 
 
 A video demonstrating the package's capabilities [has been made available here.](https://www.youtube.com/watch?v=tx530QOPeZo&feature=youtu.be)
 
-## Installation 
-SegyIO can be installed using the Julia package manager. Run the following from the Julia REPL:
+## INSTALLATION
+
+### Using SLIM Registry (preferred method) ###
+
+First switch to package manager prompt (using ']') and add SLIM registry:
 
 ```
-Pkg.add(PackageSpec(url="https://github.com/slimgroup/SegyIO.jl.git",rev="master"))
+	registry add https://github.com/slimgroup/SLIMregistryJL.git
 ```
 
-or with GitHub account (and SSH keys registered) for full developer access:
+Then still from package manager prompt add SegyIO:
 
 ```
-Pkg.develop(PackageSpec(url="git@github.com:slimgroup/SegyIO.jl.git"))
+	add SegyIO
 ```
 
+### Adding without SLIM registry ###
+
+After switching to package manager prompt (using ']') type:
+
+```
+    add https://github.com/slimgroup/SegyIO.jl.git
+```
 
 For more information on reading, writing, and scanning please see the [SegyIO.jl Wiki!](https://github.com/slimgroup/SegyIO.jl/wiki)
