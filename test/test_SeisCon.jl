@@ -1,6 +1,6 @@
 @testset "SeisCon" begin
 
-    global s = segy_scan(joinpath(dirname(pathof(SegyIO)),"data/"), "overthrust", ["GroupX"; "GroupY"], verbosity = 0)
+    global s = segy_scan(joinpath(SegyIO.myRoot,"data/"), "overthrust", ["GroupX"; "GroupY"], verbosity = 0)
     @testset "Constructor" begin
         @test typeof(s) == SeisCon
         @test length(s) == 97

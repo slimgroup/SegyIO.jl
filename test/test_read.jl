@@ -1,6 +1,6 @@
 # Test reading component of SegyIO
 
-global s = IOBuffer(read(joinpath(dirname(pathof(SegyIO)),"data/overthrust_2D_shot_1_20.segy")))
+global s = IOBuffer(read(joinpath(SegyIO.myRoot,"data/overthrust_2D_shot_1_20.segy")))
 
 @testset "read" begin
 

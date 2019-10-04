@@ -1,7 +1,7 @@
 name = "SegyIO"
 uuid = "157a0f19-4d44-4de5-a0d0-07e2f0ac4dfa"
 authors = ["Henryk Modzelewski <henryk_modzelewski@mac.com>"]
-version = "0.7.0"
+version = "0.7.1"
 
 [deps]
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"

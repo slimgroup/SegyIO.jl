@@ -1,5 +1,7 @@
 module SegyIO
 
+    myRoot=dirname(dirname(pathof(SegyIO)))
+
     # what's being used
     using Distributed
     using Printf
