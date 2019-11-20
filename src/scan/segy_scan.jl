@@ -28,7 +28,7 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::
     files = map(x -> dir*x, filenames)
     files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files_sort)
+    s = pmap(run_scan, pool, files_sort)
 
     return merge(s)
 end
@@ -47,7 +47,7 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, b
     end
     files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, blocksize, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files_sort)
+    s = pmap(run_scan, pool, files_sort)
     
     return merge(s)
 end
@@ -69,7 +69,7 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1};
     files = map(x -> dir*x, filenames)
     files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(run_scan, files_sort)
+    s = pmap(run_scan, pool, files_sort)
     
     return merge(s)
 end
@@ -93,7 +93,7 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1};
     end
     files_sort = files[sortperm(filesize.(files), rev = true)]
     run_scan(f) = scan_file(f, keys, chunksize=chunksize, verbosity=verbosity)
-    s = pmap(pool, run_scan, files_sort)
+    s = pmap(run_scan, pool, files_sort)
     
     return merge(s)
 end
