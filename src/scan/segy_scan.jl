@@ -2,9 +2,9 @@ export segy_scan
 
 """
     segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::Int; 
-                           chunksize::Int = 1024,
-                           pool::WorkerPool = WorkerPool(workers()),
-                           verbosity::Int = 1)
+              chunksize::Int = CHUNKSIZE,
+              pool::WorkerPool = WorkerPool(workers()),
+              verbosity::Int = 1)
 
     returns: SeisCon
 
@@ -14,14 +14,16 @@ in `pool`, the default pool is all workers.
 
 `chunksize` determines how many MB of data will be loaded into memory at a time.
 
+`CHUNKSIZE` defaults to 2048MB.
+
 `verbosity` set to 0 silences updates on the current file being scanned.
 
 """
 function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::Int; 
-                    chunksize::Int = 1024,
-                    pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1,
-                    filter::Bool = true)
+                   chunksize::Int = CHUNKSIZE,
+                   pool::WorkerPool = WorkerPool(workers()),
+                   verbosity::Int = 1,
+                   filter::Bool = true)
     
     endswith(dir, "/") ? nothing : dir *= "/"
     filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
@@ -33,11 +35,20 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::
     return merge(s)
 end
 
+"""
+    segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, blocksize::Int;
+              chunksize::Int = CHUNKSIZE,
+              pool::WorkerPool = WorkerPool(workers()),
+              verbosity::Int = 1)
+
+Scans all files whose name contains `filt` in each directory of `dirs` using `blocksize`.
+
+"""
 function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, blocksize::Int; 
-                    chunksize::Int = 1024,
-                    pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1,
-                    filter::Bool = true)
+                   chunksize::Int = CHUNKSIZE,
+                   pool::WorkerPool = WorkerPool(workers()),
+                   verbosity::Int = 1,
+                   filter::Bool = true)
     
     files = Array{String,1}()
     for dir in dirs 
@@ -53,16 +64,20 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, b
 end
 
 """
-    segy_scan(dir::String, filt::String, keys::Array{String,1})
+    segy_scan(dir::String, filt::String, keys::Array{String,1},
+              chunksize::Int = CHUNKSIZE,
+              pool::WorkerPool = WorkerPool(workers()),
+              verbosity::Int = 1)
 
 If no `blocksize` is specified, the scanner automatically detects source locations and returns
-blocks of continguous traces for each source location. 
+blocks of continguous traces for each source location, but each block no larger then CHUNKSIZE. 
+
 """
 function segy_scan(dir::String, filt::String, keys::Array{String,1}; 
-                    chunksize::Int = 1024,
-                    pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1,
-                    filter::Bool = true)
+                   chunksize::Int = CHUNKSIZE,
+                   pool::WorkerPool = WorkerPool(workers()),
+                   verbosity::Int = 1,
+                   filter::Bool = true)
     
     endswith(dir, "/") ? nothing : dir *= "/"
     filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
@@ -75,15 +90,19 @@ function segy_scan(dir::String, filt::String, keys::Array{String,1};
 end
 
 """
-    segy_scan(dir::Array{String,1}, filt::String, keys::Array{String,1})
+    segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1},
+              chunksize::Int = CHUNKSIZE,
+              pool::WorkerPool = WorkerPool(workers()),
+              verbosity::Int = 1)
 
-Scans all files whose name contains `filt` in each directory of `dir`.
+Scans all files whose name contains `filt` in each directory of `dirs`.
+
 """
 function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}; 
-                    chunksize::Int = 1024,
-                    pool::WorkerPool = WorkerPool(workers()),
-                    verbosity::Int = 1,
-                    filter::Bool = true)
+                   chunksize::Int = CHUNKSIZE,
+                   pool::WorkerPool = WorkerPool(workers()),
+                   verbosity::Int = 1,
+                   filter::Bool = true)
 
     files = Array{String,1}()
     for dir in dirs 

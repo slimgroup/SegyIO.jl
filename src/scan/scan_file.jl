@@ -2,8 +2,8 @@ export scan_file
 
 """
     scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
-                chunksize::Int = 1024,
-                verbosity::Int = 1)
+              chunksize::Int = CHUNKSIZE,
+              verbosity::Int = 1)
 
 Scan `file` for header fields in `keys`, and return a SeisCon object containing
 the metadata summaries in `blocksize` groups of traces. Load `chunksize` MB of `file`
@@ -19,8 +19,8 @@ summarize the remaining traces.
     s = scan_file('testdata.segy', ["SourceX", "SourceY"], 300)
 """
 function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
-                    chunksize::Int = 1024,
-                    verbosity::Int = 1)
+                   chunksize::Int = CHUNKSIZE,
+                   verbosity::Int = 1)
     
     # Put fileheader in memory and read
     verbosity==1 && println("Scanning ... $file") 
@@ -37,8 +37,7 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
     count = 1
 
     # Blocks to load per chunk
-    mb2b = 1024^2
-    max_blocks_per_chunk = Int(floor(chunksize*mb2b/mem_block))
+    max_blocks_per_chunk = Int(floor(chunksize*MB2B/mem_block))
 
     # Read at most one full chunk into buffer
     seek(s, 3600)
@@ -57,8 +56,8 @@ end
 
 """
     scan_file(file::String, keys::Array{String, 1};
-                chunksize::Int = 1024,
-                verbosity::Int = 1)
+              chunksize::Int = CHUNKSIZE,
+              verbosity::Int = 1)
 
 Scan `file` for header fields in `keys`, and return a SeisCon object containing
 the metadata summaries in single-source groups of traces. Load `chunksize` MB of `file`
@@ -70,8 +69,8 @@ into memory at a time.
 
 """
 function scan_file(file::String, keys::Array{String, 1};
-                    chunksize::Int = 10*1024,
-                    verbosity::Int = 1)
+                   chunksize::Int = 10*CHUNKSIZE,
+                   verbosity::Int = 1)
 
     # Put fileheader in memory and read
     verbosity==1 && println("Scanning ... $file") 
@@ -88,7 +87,7 @@ function scan_file(file::String, keys::Array{String, 1};
     ntraces_file = Int((fsize - 3600)/mem_trace)
     scan = Array{BlockScan,1}(undef, 0)
     seek(s, 3600)
-    traces_per_chunk = Int(floor(chunksize*1024^2/mem_trace))
+    traces_per_chunk = Int(floor(chunksize*MB2B/mem_trace))
 
     mem_chunk = traces_per_chunk*mem_trace
     fl_eof = false 
