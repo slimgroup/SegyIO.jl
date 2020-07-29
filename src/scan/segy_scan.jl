@@ -19,7 +19,7 @@ in `pool`, the default pool is all workers.
 `verbosity` set to 0 silences updates on the current file being scanned.
 
 """
-function segy_scan(dir::String, filt::String, keys::Array{String,1}, blocksize::Int; 
+function segy_scan(dir::String, filt::Union{String, Regex}, keys::Array{String,1}, blocksize::Int; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
@@ -44,7 +44,7 @@ end
 Scans all files whose name contains `filt` in each directory of `dirs` using `blocksize`.
 
 """
-function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}, blocksize::Int; 
+function segy_scan(dirs::Array{String,1}, filt::Union{String, Regex}, keys::Array{String,1}, blocksize::Int; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
@@ -73,7 +73,7 @@ If no `blocksize` is specified, the scanner automatically detects source locatio
 blocks of continguous traces for each source location, but each block no larger then CHUNKSIZE. 
 
 """
-function segy_scan(dir::String, filt::String, keys::Array{String,1}; 
+function segy_scan(dir::String, filt::Union{String, Regex}, keys::Array{String,1}; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
@@ -98,7 +98,7 @@ end
 Scans all files whose name contains `filt` in each directory of `dirs`.
 
 """
-function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1}; 
+function segy_scan(dirs::Array{String,1}, filt::Union{String, Regex}, keys::Array{String,1}; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
@@ -117,4 +117,11 @@ function segy_scan(dirs::Array{String,1}, filt::String, keys::Array{String,1};
     return merge(s)
 end
 
-searchdir(path,filt) = filter(x->occursin(filt,x), readdir(path))
+function searchdir(path, filt::String)
+    filt = Regex(replace(filt, "*" => ".*."))
+    filter!(x->occursin(filt, x),readdir(path))
+end
+
+function searchdir(path, filt::Regex)
+    filter!(x->occursin(filt, x),readdir(path))
+end
