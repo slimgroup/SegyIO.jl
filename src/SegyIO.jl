@@ -32,6 +32,7 @@ module SegyIO
     # Writer
     include("write/write_fileheader.jl")
     include("write/segy_write.jl")
+    include("write/segy_write_append.jl")
     include("write/write_trace.jl")
 
     # Scanner
