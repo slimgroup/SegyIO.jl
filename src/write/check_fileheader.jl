@@ -19,7 +19,5 @@ function check_fileheader(s::IO, fh_new::FileHeader)
     for field in fieldnames(typeof(fh.bfh))[1:end]
         if(getfield(fh.bfh, field) != getfield(fh_new.bfh, field)) @error "The existing fileheaders are different from the new SeisBlock" end
     end
-
-    return true
     
 end
