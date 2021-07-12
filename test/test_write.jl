@@ -1,6 +1,6 @@
 # Test writing component of SegyIO
 global key = ["GroupX";"GroupY";"SourceX";"SourceY"]
-global dir = string(SegyIO.myRoot,"data/")
+global dir = "../data/"
 global file_filter = "test_write"
 
 @testset "write" begin
@@ -14,7 +14,7 @@ global file_filter = "test_write"
 		set_header!(block, :GroupX, 8000);
 		set_header!(block, :GroupY, 8500);
 
-		segy_write(string(SegyIO.myRoot,"data/test_write.segy"), block)
+		segy_write("../data/test_write.segy", block)
                 
 		s = segy_scan(dir,file_filter,key)
 		
@@ -40,7 +40,7 @@ global file_filter = "test_write"
                 set_header!(block_append, :GroupX, 8000);
                 set_header!(block_append, :GroupY, 9000);
 
-		segy_write_append(string(SegyIO.myRoot,"data/test_write.segy"), block_append)
+		segy_write_append("../data/test_write.segy", block_append)
 
 		s = segy_scan(dir,file_filter,key)
 
