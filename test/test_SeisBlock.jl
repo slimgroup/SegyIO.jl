@@ -6,6 +6,11 @@
         b = SeisBlock(rand(Float32,10,10))
         @test b.fileheader.bfh.ns == 10
         @test b.fileheader.bfh.DataSampleFormat == 5
+        vec_ = rand(Float32,10)
+        c = SeisBlock(vec_)
+        mat_ = reshape(vec_,10,1)
+        d = SeisBlock(mat_)
+        @test c.data == d.data
     end
 
     @testset "Methods" begin

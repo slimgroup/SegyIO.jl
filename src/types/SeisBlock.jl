@@ -11,7 +11,7 @@ end
 size(block::SeisBlock) = size(block.data)
 length(block::SeisBlock) = length(block.traceheaders)
 
-function SeisBlock(data::Array{DT,2}) where {DT<:Union{Float32, IBMFloat32}}
+function SeisBlock(data::Matrix{DT}) where {DT<:Union{Float32, IBMFloat32}}
 
     # Construct FileHeader
     ns, ntraces = size(data)
@@ -27,4 +27,8 @@ function SeisBlock(data::Array{DT,2}) where {DT<:Union{Float32, IBMFloat32}}
     block = SeisBlock(fh, traceheaders, data)
 
     return block
+end
+
+function SeisBlock(data::Vector{DT}) where {DT<:Union{Float32, IBMFloat32}}
+    return SeisBlock(reshape(data, :, 1))
 end
