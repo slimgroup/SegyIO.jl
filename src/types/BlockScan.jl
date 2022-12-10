@@ -1,7 +1,7 @@
 export BlockScan
 
 mutable struct BlockScan
-    file::String
+    file::AbstractString
     startbyte::Int
     endbyte::Int
     summary::Dict{String, Array{Int32, 1}}

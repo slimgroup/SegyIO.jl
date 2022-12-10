@@ -78,6 +78,8 @@ function fh_byte2sample()
         "NumberOfExtTextualHeaders"         => 3504)
 end
 
+fh_keys() = collect(keys(fh_byte2sample()))
+
 function show(io::IO, bfh::BinaryFileHeader)
     
     println("BinaryFileHeader:")

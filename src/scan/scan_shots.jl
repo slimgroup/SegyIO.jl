@@ -1,11 +1,11 @@
 export scan_shots
 
 function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
-                    keys::Array{String,1}, file::String, scan::Array{BlockScan,1}, fl_eof::Bool)
+                    keys::Array{String,1}, file::AbstractString, scan::Array{BlockScan,1}, fl_eof::Bool)
 
     # Load chunk into memory
     chunk_start = position(s)
-    buf = IOBuffer(read(s, mem_chunk)) 
+    buf = IOBuffer(read(s, mem_chunk))
     eof(s) ? (fl_eof=true) : nothing
     buf_size = position(seekend(buf)); seekstart(buf)
     ntraces = Int(floor(buf_size/mem_trace))

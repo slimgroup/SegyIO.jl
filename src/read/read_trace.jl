@@ -12,20 +12,12 @@ Use:    read_trace!(s::IO,
 Reads 'trace' from the current position of stream 's' into 'headers' and
 'data'. 
 """
-function read_trace!(s::IO, fh::BinaryFileHeader,
-                    datatype::Type,
-                    headers::AbstractArray{BinaryTraceHeader,1},
-                    data::AbstractArray{<:Union{IBMFloat32, Float32}, 2},
-                    trace::Int, 
-                    th_byte2sample::Dict{String,Int32})
-    
-    # Read trace header
-    setindex!(headers, read_traceheader(s, th_byte2sample), trace)
-    
-    # Read trace
-    setindex!(data, read_tracedata(s, fh, datatype), :, trace)
-    
-    nothing
+function read_traces!(s::IO, fh::BinaryFileHeader, datatype::Type,
+                    headers::AbstractVector{BinaryTraceHeader},
+                    data::AbstractMatrix{<:Union{IBMFloat32, Float32}},
+                    trace::Int, th_byte2sample::Dict{String,Int32})
+
+    return read_traces!(s, fh, datatype, headers, data, trace, collect(keys(th_byte2sample)), th_byte2sample)
 end
 
 """
@@ -41,20 +33,23 @@ Use:    read_trace!(s::IO,
 Reads 'trace' from the current position of stream 's' into 'headers' and
 'data'. Only the header values in 'keys' and read.
 """
-function read_trace!(s::IO, fh::BinaryFileHeader,
+function read_traces!(s::IO, fh::BinaryFileHeader,
                     datatype::Type,
-                    headers::AbstractArray{BinaryTraceHeader,1},
-                    data::AbstractArray{<:Union{IBMFloat32, Float32}, 2},
+                    headers::AbstractVector{BinaryTraceHeader},
+                    data::AbstractMatrix{<:Union{IBMFloat32, Float32}},
                     trace::Int,
                     keys::Array{String,1},
                     th_byte2sample::Dict{String,Int32})
-    
-    # Read trace header
-    setindex!(headers, read_traceheader(s, keys, th_byte2sample), trace)
-    
-    # Read trace
-    setindex!(data, read_tracedata(s, fh, datatype), :, trace)
-    
+
+    ntrace = size(data, 2)
+    ntrace == 0 && return
+    for trace_loc=0:ntrace-1
+        # Read trace header
+        setindex!(headers, read_traceheader(s, keys, th_byte2sample), trace+trace_loc)
+
+        # Read trace
+        setindex!(data, read_tracedata(s, fh, datatype), :, trace_loc+1)
+    end
     nothing
 end
 
