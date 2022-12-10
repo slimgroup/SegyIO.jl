@@ -18,7 +18,7 @@ summarize the remaining traces.
 
     s = scan_file('testdata.segy', ["SourceX", "SourceY"], 300)
 """
-function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
+function scan_file(file::AbstractString, keys::Array{String, 1}, blocksize::Int;
                    chunksize::Int = CHUNKSIZE,
                    verbosity::Int = 1)
     
@@ -30,19 +30,20 @@ function scan_file(file::String, keys::Array{String, 1}, blocksize::Int;
     # Calc number of blocks
     fsize = position(seekend(s))
     mem_trace = 240 + fh.bfh.ns*4
-    mem_block = blocksize*mem_trace
+    mem_block = min(fsize, blocksize*mem_trace)
     ntraces_file = Int((fsize - 3600)/mem_trace)
-    nblocks_file = Int(ceil(ntraces_file/blocksize))
+    nblocks_file = max(1, Int(ceil(ntraces_file/blocksize)))
     scan = Array{BlockScan,1}(undef, nblocks_file)
     count = 1
 
     # Blocks to load per chunk
-    max_blocks_per_chunk = Int(floor(chunksize*MB2B/mem_block))
+    max_blocks_per_chunk = max(1, Int(floor(chunksize*MB2B/mem_block)))
 
     # Read at most one full chunk into buffer
     seek(s, 3600)
-    
+
     # For each chunk
+    @show mem_block, chunksize*MB2B, max_blocks_per_chunk, nblocks_file
     for c in 1:max_blocks_per_chunk:nblocks_file
        
         count = scan_chunk!(s, max_blocks_per_chunk, mem_block, mem_trace,
@@ -68,7 +69,7 @@ into memory at a time.
     s = scan_file('testdata.segy', ["SourceX", "SourceY"])
 
 """
-function scan_file(file::String, keys::Array{String, 1};
+function scan_file(file::AbstractString, keys::Array{String, 1};
                    chunksize::Int = 10*CHUNKSIZE,
                    verbosity::Int = 1)
 
@@ -84,13 +85,14 @@ function scan_file(file::String, keys::Array{String, 1};
     # Calc number of blocks
     fsize = filesize(file)
     mem_trace = 240 + fh.bfh.ns*4
-    ntraces_file = Int((fsize - 3600)/mem_trace)
     scan = Array{BlockScan,1}(undef, 0)
     seek(s, 3600)
-    traces_per_chunk = Int(floor(chunksize*MB2B/mem_trace))
+
+    ntraces = Int((fsize - 3600)/mem_trace)
+    traces_per_chunk = min(ntraces, Int(floor(chunksize*MB2B/mem_trace)))
 
     mem_chunk = traces_per_chunk*mem_trace
-    fl_eof = false 
+    fl_eof = false
     while !eof(s)
         scan_shots!(s, mem_chunk, mem_trace, keys, file, scan, fl_eof)
     end

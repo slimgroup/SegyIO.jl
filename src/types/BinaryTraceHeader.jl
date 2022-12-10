@@ -190,6 +190,8 @@ function th_byte2sample()
 
 end
 
+th_keys() = collect(keys(th_byte2sample()))
+
 function BinaryTraceHeader()
     BinaryTraceHeader(0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,

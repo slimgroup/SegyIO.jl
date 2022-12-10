@@ -1,8 +1,9 @@
 module SegyIO
 
     myRoot=dirname(dirname(pathof(SegyIO)))
-    CHUNKSIZE=2048
-    MB2B=1024^2
+    CHUNKSIZE = 2048
+    TRACE_CHUNKSIZE = 2048
+    MB2B = 1024^2
 
     # what's being used
     using Distributed

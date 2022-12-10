@@ -9,45 +9,7 @@ Use: fileheader = read_fileheader(s::IO; bigendian::Bool = true)
 Returns a binary file header formed using bytes 3200-3600 from the stream 's'.
 """
 function read_fileheader(s::IO; bigendian::Bool = true)
-    
-    # Return to start of stream
-    seekstart(s)
-
-    # Read text header
-    th = String(read(s, 3200))
-
-    # Initialize binary file header
-    bfh = BinaryFileHeader()
-    fh_b2s = fh_byte2sample()
-
-
-    if bigendian
-        # Read all header values and put in fileheader
-        for k in keys(fh_b2s)
-
-           # Seek to this header value location
-           seek(s, fh_b2s[k])
-
-           # Read into file header
-           sym = Symbol(k)
-           setfield!(bfh, sym, bswap(read(s, typeof(getfield(bfh, sym)))))
-        end
-    else
-        # Read all header values and put in fileheader
-        for k in keys(fh_b2s)
-
-           # Seek to this header value location
-           seek(s, fh_b2s[k])
-
-           # Read into file header
-           sym = Symbol(k)
-           setfield!(bfh, sym, read(s, typeof(getfield(bfh, sym))))
-        end
-    end
-    
-    # Move to end of file header
-    seek(s, 3600)
-    return FileHeader(th, bfh)
+    return read_fileheader(s, fh_keys(); bigendian=bigendian)
 end
 
 
@@ -85,39 +47,23 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
     seekstart(s)
 
     # Read text header
-    th = String(read(s, 3200))
+    th = read(s, 3600)
 
     # Initialize binary file header
     bfh = BinaryFileHeader()
     fh_b2s = fh_byte2sample()
+    swp(x) = bigendian ? bswap(x) : x
 
+    for k in keys
 
-    if bigendian
-        # Read all header values and put in fileheader
-        for k in keys
-
-           # Seek to this header value location
-           seek(s, fh_b2s[k])
-
-           # Read into file header
-           sym = Symbol(k)
-           setfield!(bfh, sym, bswap(read(s, typeof(getfield(bfh, sym)))))
-        end
-    else
-        # Read all header values and put in fileheader
-        for k in keys
-
-           # Seek to this header value location
-           seek(s, fh_b2s[k])
-
-           # Read into file header
-           sym = Symbol(k)
-           setfield!(bfh, sym, read(s, typeof(getfield(bfh, sym))))
-        end
+        # Read into file header
+        sym = Symbol(k)
+        nb = sizeof(getfield(bfh, sym))-1
+        bst = fh_b2s[k]+1
+        val = swp(reinterpret(typeof(getfield(bfh, sym)), th[bst:bst+nb])[1])
+        setfield!(bfh, sym, val)
     end
 
-    # Move to end of file header
     seek(s, 3600)
-
-    return FileHeader(th, bfh)
+    return FileHeader(String(th[1:3200]), bfh)
 end

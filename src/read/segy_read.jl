@@ -4,7 +4,7 @@ export segy_read
 block = segy_read(file::String)
 """
 function segy_read(file::String; buffer::Bool = true, warn_user::Bool = true)
-    
+
     if buffer
         s = IOBuffer(read(open(file)))
     else
