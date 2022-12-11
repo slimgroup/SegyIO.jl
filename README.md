@@ -7,26 +7,12 @@ A video demonstrating the package's capabilities [has been made available here.]
 
 ## INSTALLATION
 
-### Using SLIM Registry (preferred method) ###
-
-First switch to package manager prompt (using ']') and add SLIM registry:
+SegyIO is a registered package and can be installed directly from the julia package manager (`]` in the julia REPL) :
 
 ```
-	registry add https://github.com/slimgroup/SLIMregistryJL.git
+ add SegyIO
 ```
 
-Then still from package manager prompt add SegyIO:
+## Extension
 
-```
-	add SegyIO
-```
-
-### Adding without SLIM registry ###
-
-After switching to package manager prompt (using ']') type:
-
-```
-    add https://github.com/slimgroup/SegyIO.jl.git
-```
-
-For more information on reading, writing, and scanning please see the [SegyIO.jl Wiki!](https://github.com/slimgroup/SegyIO.jl/wiki)
+SegyIO is implemented for POSIX systems. For Cloud storage, use [CloudSegyIO.jl](https://github.com/slimgroup/CloudSegyIO.jl), the Cloud storage extension of SegyIO.
