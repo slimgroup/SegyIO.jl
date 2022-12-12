@@ -9,14 +9,15 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     eof(s) ? (fl_eof=true) : nothing
     buf_size = position(seekend(buf)); seekstart(buf)
     ntraces = Int(floor(buf_size/mem_trace))
-    headers = Array{BinaryTraceHeader,1}(undef, ntraces)
+    headers = [BinaryTraceHeader() for _ = 1:ntraces]
 
-    # Get headers from chunk 
+    # Get headers from chunk
+    th = zeros(UInt8, 240)
     for i in 1:ntraces
-        headers[i] = read_traceheader(buf, keys, SegyIO.th_b2s)
+        read_traceheader!(buf, keys, SegyIO.th_b2s, headers[i]; th=th)
         skip(buf, mem_trace-240)
-    end 
-    
+    end
+
     # Get all requested header vectors
     vals = Dict{String, Array{Int32,1}}()
     for k in keys
@@ -29,7 +30,7 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     sy = vals["SourceY"] 
     #combo = [[view(sx,i) view(sy,i)] for i in 1:ntraces]
     combo = [[sx[i] sy[i]] for i in 1:ntraces]
-    part = delim_vector(combo,1)
+    part = delim_vector(combo, 1)
     fl_eof ? push!(part, length(combo) + 1) : push!(part, ntraces + 1)
 
     # Summarise each shot

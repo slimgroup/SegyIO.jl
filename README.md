@@ -1,4 +1,5 @@
 # SegyIO.jl
+
 SegyIO is a Julia package for reading and writing SEGY Rev 1 files. In addition to providing tools for reading/writing entire files, SegyIO provides a parallel scanner that reduces any number of files into a single object with direct out-of-core access to the underlying data. 
 
 [![Build Status](https://github.com/slimgroup/SegyIO.jl/workflows/CI-tests/badge.svg)](https://github.com/slimgroup/SegyIO.jl/actions?query=workflow%3ACI-tests)
