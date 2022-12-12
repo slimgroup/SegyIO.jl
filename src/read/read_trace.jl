@@ -12,12 +12,11 @@ Use:    read_trace!(s::IO,
 Reads 'trace' from the current position of stream 's' into 'headers' and
 'data'. 
 """
-function read_traces!(s::IO, fh::BinaryFileHeader, datatype::Type,
-                    headers::AbstractVector{BinaryTraceHeader},
-                    data::AbstractMatrix{<:Union{IBMFloat32, Float32}},
-                    trace::Int, th_byte2sample::Dict{String,Int32})
+function read_traces!(s::IO, headers::AbstractVector{BinaryTraceHeader},
+                      data::AbstractMatrix{<:Union{IBMFloat32, Float32}},
+                      th_byte2sample::Dict{String,Int32})
 
-    return read_traces!(s, fh, datatype, headers, data, trace, collect(keys(th_byte2sample)), th_byte2sample)
+    return read_traces!(s, headers, data, collect(keys(th_byte2sample)), th_byte2sample)
 end
 
 """
@@ -33,38 +32,23 @@ Use:    read_trace!(s::IO,
 Reads 'trace' from the current position of stream 's' into 'headers' and
 'data'. Only the header values in 'keys' and read.
 """
-function read_traces!(s::IO, fh::BinaryFileHeader,
-                    datatype::Type,
-                    headers::AbstractVector{BinaryTraceHeader},
-                    data::AbstractMatrix{<:Union{IBMFloat32, Float32}},
-                    trace::Int,
-                    keys::Array{String,1},
-                    th_byte2sample::Dict{String,Int32})
+function read_traces!(s::IO, headers::AbstractVector{BinaryTraceHeader},
+                      data::AbstractMatrix{DT}, keys::Array{String,1},
+                      th_byte2sample::Dict{String,Int32}) where {DT<:Union{IBMFloat32, Float32}}
 
     ntrace = size(data, 2)
     ntrace == 0 && return
+    swp = swp_func(DT)
+    tmph = zeros(UInt8, 240)
     for trace_loc=0:ntrace-1
         # Read trace header
-        setindex!(headers, read_traceheader(s, keys, th_byte2sample), trace+trace_loc)
-
+        read_traceheader!(s, keys, th_byte2sample, headers[trace_loc+1]; th=tmph)
         # Read trace
-        setindex!(data, read_tracedata(s, fh, datatype), :, trace_loc+1)
+        read!(s, view(data, :, trace_loc+1))
     end
+    map!(swp, data, data)
     nothing
 end
 
-"""
-Read a single trace from current position in stream as Float32
-"""
-function read_tracedata(s::IO, fh::BinaryFileHeader, dsf::Type{DT}) where {DT<:IBMFloat32}
-    dummy=Vector{DT}(undef, fh.ns)
-    read!(s, dummy)
-    return dummy
-end
-
-function read_tracedata(s::IO, fh::BinaryFileHeader, dsf::Type{DT}) where {DT<:Float32}
-    dummy=Vector{DT}(undef, fh.ns)
-    read!(s, dummy)
-    return bswap.(dummy)
-end
-
+swp_func(::Type{Float32}) = bswap
+swp_func(::Any) = x -> x

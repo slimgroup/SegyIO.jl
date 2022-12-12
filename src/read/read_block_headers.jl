@@ -21,7 +21,7 @@ function read_block_headers!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf:
     th_b2s = th_byte2sample()
     # Read each traceheader
     for trace in 1:ntraces
-        setindex!(headers, read_traceheader(s, keys, th_b2s), trace)
+        read_traceheader!(s, keys, th_b2s, headers[trace])
         skip(s, ns*4)
     end
 
@@ -48,7 +48,7 @@ function read_block_headers!(b::BlockScan, ns::Int, dsf::Int, headers)
     th_b2s = th_byte2sample()
     # Read each traceheader
     for trace in 1:ntraces
-        setindex!(headers, read_traceheader(s, th_b2s), trace)
+        read_traceheader!(s, th_b2s, headers[trace])
         skip(s, ns*4)
     end
 

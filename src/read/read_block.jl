@@ -29,6 +29,6 @@ function read_block!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf::Int, tm
         tracee = min(trace + TRACE_CHUNKSIZE - 1, ntraces)
         chunk = length(trace:tracee)*trace_size
         sloc = IOBuffer(read(s, chunk))
-        read_traces!(sloc, fh.bfh, datatype, tmp_headers, view(tmp_data, :, trace:tracee), trace, keys, th_b2s)
+        read_traces!(sloc, view(tmp_headers, trace:tracee), view(tmp_data, :, trace:tracee), keys, th_b2s)
     end
 end

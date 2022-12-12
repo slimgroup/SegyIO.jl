@@ -18,7 +18,6 @@ Read entire SEGY file from stream 's', only reading the header values in 'keys'.
 """
 function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool; 
                    start_byte::Int = 3600, end_byte::Int = position(seekend(s)))
-    
     # Read File Header
     fh = read_fileheader(s)
     
@@ -43,16 +42,18 @@ function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool;
     ntraces = Int((end_byte - start_byte)/trace_size)
 
     # Preallocate memory
-    headers = Array{BinaryTraceHeader, 1}(undef, ntraces)
+    headers = [BinaryTraceHeader() for _ = 1:ntraces]
     data = Array{datatype, 2}(undef, fh.bfh.ns, ntraces)
     th_b2s = th_byte2sample()
 
     # Read each trace
+    ref = position(s)
     for trace in 1:TRACE_CHUNKSIZE:ntraces
+        seek(s, (trace - 1) * trace_size + ref)
         tracee = min(trace + TRACE_CHUNKSIZE - 1, ntraces)
         chunk = length(trace:tracee)*trace_size
         sloc = IOBuffer(read(s, chunk))
-        read_traces!(sloc, fh.bfh, datatype, headers, view(data, :, trace:tracee), trace, keys, th_b2s)
+        read_traces!(sloc, view(headers, trace:tracee), view(data, :, trace:tracee), keys, th_b2s)
     end
 
     return SeisBlock(fh, headers, data)

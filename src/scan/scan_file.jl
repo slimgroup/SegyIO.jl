@@ -43,7 +43,6 @@ function scan_file(file::AbstractString, keys::Array{String, 1}, blocksize::Int;
     seek(s, 3600)
 
     # For each chunk
-    @show mem_block, chunksize*MB2B, max_blocks_per_chunk, nblocks_file
     for c in 1:max_blocks_per_chunk:nblocks_file
        
         count = scan_chunk!(s, max_blocks_per_chunk, mem_block, mem_trace,
