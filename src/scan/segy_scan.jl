@@ -19,7 +19,7 @@ in `pool`, the default pool is all workers.
 `verbosity` set to 0 silences updates on the current file being scanned.
 
 """
-function segy_scan(dir::String, filt::Union{String, Regex}, keys::Array{String,1}, blocksize::Int; 
+function segy_scan(dir::AbstractString, filt::Union{String, Regex}, keys::Array{String,1}, blocksize::Int; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
@@ -44,13 +44,13 @@ end
 Scans all files whose name contains `filt` in each directory of `dirs` using `blocksize`.
 
 """
-function segy_scan(dirs::Array{String,1}, filt::Union{String, Regex}, keys::Array{String,1}, blocksize::Int; 
+function segy_scan(dirs::Array{<:AbstractString,1}, filt::Union{String, Regex}, keys::Array{String,1}, blocksize::Int; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
                    filter::Bool = true)
     
-    files = Array{String,1}()
+    files = Array{supertype(typeof(dirs[1]*"")), 1}()
     for dir in dirs 
         endswith(dir, "/") ? nothing : dir *= "/"
         filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])
@@ -73,7 +73,7 @@ If no `blocksize` is specified, the scanner automatically detects source locatio
 blocks of continguous traces for each source location, but each block no larger then CHUNKSIZE. 
 
 """
-function segy_scan(dir::String, filt::Union{String, Regex}, keys::Array{String,1}; 
+function segy_scan(dir::AbstractString, filt::Union{String, Regex}, keys::Array{String,1}; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
@@ -98,13 +98,13 @@ end
 Scans all files whose name contains `filt` in each directory of `dirs`.
 
 """
-function segy_scan(dirs::Array{String,1}, filt::Union{String, Regex}, keys::Array{String,1}; 
+function segy_scan(dirs::Array{<:AbstractString,1}, filt::Union{String, Regex}, keys::Array{String,1}; 
                    chunksize::Int = CHUNKSIZE,
                    pool::WorkerPool = WorkerPool(workers()),
                    verbosity::Int = 1,
                    filter::Bool = true)
 
-    files = Array{String,1}()
+    files = Array{supertype(typeof(dirs[1]*"")), 1}()
     for dir in dirs 
         endswith(dir, "/") ? nothing : dir *= "/"
         filter ? (filenames = searchdir(dir, filt)) : (filenames = [filt])

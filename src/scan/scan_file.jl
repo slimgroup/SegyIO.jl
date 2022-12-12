@@ -74,7 +74,7 @@ function scan_file(file::AbstractString, keys::Array{String, 1};
                    verbosity::Int = 1)
 
     # Put fileheader in memory and read
-    verbosity==1 && println("Scanning ... $file") 
+    verbosity==1 && println("Scanning ... $file")
     s = open(file)
     fh = read_fileheader(s)
 
