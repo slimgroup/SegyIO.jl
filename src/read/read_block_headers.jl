@@ -8,7 +8,8 @@ function read_block_headers!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf:
     s = IOBuffer(read(f, brange))
     ntraces = Int((brange)/(240 + ns*4))
     fh = FileHeader()
-    fh.bfh.ns = ns; fh.bfh.DataSampleFormat = dsf
+    fh.bfh.ns = ns
+    fh.bfh.DataSampleFormat = dsf
 
     # Check dsf
     datatype = Float32
@@ -19,9 +20,10 @@ function read_block_headers!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf:
     end
 
     th_b2s = th_byte2sample()
+    tmph = zeros(UInt8, 240)
     # Read each traceheader
     for trace in 1:ntraces
-        read_traceheader!(s, keys, th_b2s, headers[trace])
+        read_traceheader!(s, keys, th_b2s, headers[trace]; th=tmph)
         skip(s, ns*4)
     end
 

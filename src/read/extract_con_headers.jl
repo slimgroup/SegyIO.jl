@@ -31,7 +31,7 @@ function extractor(con, keys, block)
     headers = read_con_headers(con, copy(keys), block, prealloc_traces = 10000000)
     ntraces = length(headers)
     nkeys = length(keys)  
-    header_array = Array{Int32,2}(undef, ntraces, nkeys)
+    header_array = Array{Int32, 2}(undef, ntraces, nkeys)
 
     for cur_key in 1:nkeys
         header_array[:,cur_key] = get_header(headers, Symbol(keys[cur_key]), scale=false)

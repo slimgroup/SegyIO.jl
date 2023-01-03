@@ -9,7 +9,7 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     eof(s) ? (fl_eof=true) : nothing
     buf_size = position(seekend(buf)); seekstart(buf)
     ntraces = Int(floor(buf_size/mem_trace))
-    headers = [BinaryTraceHeader() for _ = 1:ntraces]
+    headers = zeros(BinaryTraceHeader, ntraces)
 
     # Get headers from chunk
     th = zeros(UInt8, 240)
@@ -31,6 +31,7 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     #combo = [[view(sx,i) view(sy,i)] for i in 1:ntraces]
     combo = [[sx[i] sy[i]] for i in 1:ntraces]
     part = delim_vector(combo, 1)
+
     fl_eof ? push!(part, length(combo) + 1) : push!(part, ntraces + 1)
 
     # Summarise each shot
