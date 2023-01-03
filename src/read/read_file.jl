@@ -42,7 +42,7 @@ function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool;
     ntraces = Int((end_byte - start_byte)/trace_size)
 
     # Preallocate memory
-    headers = [BinaryTraceHeader() for _ = 1:ntraces]
+    headers = zeros(BinaryTraceHeader, ntraces)
     data = Array{datatype, 2}(undef, fh.bfh.ns, ntraces)
     th_b2s = th_byte2sample()
 
