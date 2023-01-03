@@ -24,8 +24,9 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
 
     # Pre-allocate
     data = Array{datatype,2}(undef, con.ns, prealloc_traces) 
-    headers = [BinaryTraceHeader() for _=1:prealloc_traces]
-    fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
+    headers = zeros(BinaryTraceHeader, prealloc_traces)
+    fh = FileHeader()
+    set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
     trace_count = 0
@@ -42,7 +43,7 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
             println("Expanding preallocated memory")
             prealloc_traces *= 2
             data = hcat(data, Array{datatype,2}(undef, con.ns, ntraces+prealloc_traces))
-            append!(headers, Array{BinaryTraceHeader,1}(undef, ntraces+prealloc_traces))
+            append!(headers, zeros(BinaryTraceHeader, ntraces+prealloc_traces))
         end
         tmp_data = view(data, :,(trace_count+1):(trace_count+ntraces))
         tmp_headers = view(headers, (trace_count+1):(trace_count+ntraces)) 
@@ -73,7 +74,7 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
 
     # Pre-allocate
     data = Array{datatype,2}(undef, con.ns, prealloc_traces) 
-    headers = [BinaryTraceHeader() for _=1:prealloc_traces]
+    headers = zeros(BinaryTraceHeader, prealloc_traces)
     fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
     set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
 
@@ -90,7 +91,7 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
         if ~isroom
             println("Expanding preallocated memory")
             data = hcat(data, Array{datatype,2}(undef, con.ns, ntraces+prealloc_traces))
-            append!(headers, Array{BinaryTraceHeader,1}(undef, ntraces+prealloc_traces))
+            append!(headers, zeros(BinaryTraceHeader, ntraces+prealloc_traces))
             prealloc_traces *= 2
         end
         tmp_data = view(data, :,(trace_count+1):(trace_count+ntraces))

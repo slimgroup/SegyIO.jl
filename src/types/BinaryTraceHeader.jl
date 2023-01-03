@@ -204,6 +204,8 @@ function BinaryTraceHeader()
     0,0,0,0,0,0,0,0,0,0,0)
 end
 
+Base.zeros(::Type{BinaryTraceHeader}, n::Integer) = [BinaryTraceHeader() for _=1:n]
+
 function show(io::IO, bth::BinaryTraceHeader)
     
     println("BinaryTraceHeader:")

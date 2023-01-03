@@ -20,7 +20,7 @@ function SeisBlock(data::Matrix{DT}) where {DT<:Union{Float32, IBMFloat32}}
     DT==Float32 ? fh.bfh.DataSampleFormat=5 : fh.bfh.DataSampleFormat=1
     
     # Construct TraceHeaders
-    traceheaders = [BinaryTraceHeader() for i in 1:ntraces]
+    traceheaders = zeros(BinaryTraceHeader, ntraces)
     set_traceheader!(traceheaders, :ns, ns*ones(Int16, ntraces))
 
     # Construct Block
