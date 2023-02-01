@@ -1,5 +1,3 @@
-export read_trace
-
 """
 Use:    read_trace!(s::IO,
                     fh::BinaryFileHeader,

@@ -1,5 +1,3 @@
-export scan_shots
-
 function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
                     keys::Array{String,1}, file::AbstractString, scan::Array{BlockScan,1}, fl_eof::Bool)
 
