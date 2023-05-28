@@ -12,6 +12,6 @@ end
 """
     copy(b::BlockScan)
 
-Create a copy of SeisCon object.
+Create a copy of BlockScan object.
 """
 copy(b::BlockScan) = BlockScan(b.file, b.startbyte, b.endbyte, b.summary)
