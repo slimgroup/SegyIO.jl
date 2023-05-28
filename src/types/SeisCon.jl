@@ -1,7 +1,7 @@
 # SeisCon type definition and methods
-import Base.size, Base.length, Base.getindex, Base.show
+import Base.size, Base.length, Base.getindex, Base.show, Base.copy
 
-export SeisCon, size, getindex, copy, merge_con, split_con, show
+export SeisCon, size, getindex, merge_con, split_con, show
 
 struct SeisCon
     ns::Int
@@ -25,7 +25,7 @@ end
 
 Create a copy of SeisCon object.
 """
-copy(s::SeisCon) = SeisCon(s.ns, s.dsf, s.blocks)
+copy(s::SeisCon) = SeisCon(s.ns, s.dsf, copy.(s.blocks))
 
 #=
 function show(s::SeisCon)
