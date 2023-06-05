@@ -9,9 +9,4 @@ mutable struct BlockScan
     summary::Dict{String, Array{Int32, 1}}
 end
 
-"""
-    copy(b::BlockScan)
-
-Create a copy of BlockScan object.
-"""
 copy(b::BlockScan) = BlockScan(b.file, b.startbyte, b.endbyte, b.summary)
