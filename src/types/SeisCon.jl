@@ -20,11 +20,6 @@ function getindex(con::SeisCon, a::Colon)
     read_con(con, 1:length(con))
 end
 
-"""
-    copy(s::SeisCon)
-
-Create a copy of SeisCon object.
-"""
 copy(s::SeisCon) = SeisCon(s.ns, s.dsf, copy.(s.blocks))
 
 #=
