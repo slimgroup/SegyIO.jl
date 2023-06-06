@@ -4,17 +4,17 @@ export read_fileheader
 """
 # Info
 
-Use: fileheader = read_fileheader(s::IO; bigendian::Bool = true)
+Use: fileheader = read_fileheader(s::IO; swap_bytes::Bool = bswap_needed(s))
 
 Returns a binary file header formed using bytes 3200-3600 from the stream 's'.
 """
-function read_fileheader(s::IO; bigendian::Bool = true)
-    return read_fileheader(s, fh_keys(); bigendian=bigendian)
+function read_fileheader(s::IO; swap_bytes::Bool = bswap_needed(s))
+    return read_fileheader(s, fh_keys(); swap_bytes=swap_bytes)
 end
 
 
 """
-Use: fileheader = read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
+Use: fileheader = read_fileheader(s::IO, keys::Array{String,1}; swap_bytes::Bool = bswap_needed(s))
 
 Return a fileheader from stream 's' with the fields defined in 'keys'.
 
@@ -41,7 +41,7 @@ Read only the sample interval and number of traces from the file header.
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Dict("expf"=>3226,"sfe"=>3234,"rgc"=>3250,"jobid"=>3200,
     "dt"=>3216,"nsfr"=>3222,"slen"=>3236,"vpol"=>3258,"renum"=>3208,"dsf"=>3224…))
 """
-function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
+function read_fileheader(s::IO, keys::Array{String,1}; swap_bytes::Bool = bswap_needed(s))
 
     # Return to start of stream
     seekstart(s)
@@ -52,7 +52,7 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
     # Initialize binary file header
     bfh = BinaryFileHeader()
     fh_b2s = fh_byte2sample()
-    swp(x) = bigendian ? bswap(x) : x
+    swp(x) = swap_bytes ? bswap(x) : x
 
     for k in keys
 

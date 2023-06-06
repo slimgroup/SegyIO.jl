@@ -3,6 +3,10 @@ export scan_shots
 function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
                     keys::Array{String,1}, file::AbstractString, scan::Array{BlockScan,1}, fl_eof::Bool)
 
+    f = open(file)
+    swap_bytes = bswap_needed(f)
+    close(f)
+
     # Load chunk into memory
     chunk_start = position(s)
     buf = IOBuffer(read(s, mem_chunk))
@@ -14,7 +18,7 @@ function scan_shots!(s::IO, mem_chunk::Int, mem_trace::Int,
     # Get headers from chunk
     th = zeros(UInt8, 240)
     for i in 1:ntraces
-        read_traceheader!(buf, keys, SegyIO.th_b2s, headers[i]; th=th)
+        read_traceheader!(buf, keys, SegyIO.th_b2s, headers[i]; swap_bytes=swap_bytes, th=th)
         skip(buf, mem_trace-240)
     end
 

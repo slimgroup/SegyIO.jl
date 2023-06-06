@@ -2,7 +2,11 @@ export scan_block
 
 function scan_block(buf::IO, mem_block::Int, mem_trace::Int, keys::Array{String,1},
                     chunk_start::Int, file::String, th_byte2sample::Dict{String, Int32})
-    
+
+    f = open(file)
+    swap_bytes = bswap_needed(f)
+    close(f)
+
     # Calc info about this block
     startbyte = position(buf) + chunk_start
     ntraces_block = Int(mem_block/mem_trace)
@@ -12,7 +16,7 @@ function scan_block(buf::IO, mem_block::Int, mem_trace::Int, keys::Array{String,
     # Read all headers and record end byte
     while !eof(buf) && count<ntraces_block
         count += 1
-        read_traceheader!(buf, keys, th_byte2sample,  headers[count] )
+        read_traceheader!(buf, keys, th_byte2sample,  headers[count]; swap_bytes=swap_bytes)
         skip(buf, mem_trace-240)
     end 
     endbyte = position(buf) + chunk_start

@@ -4,7 +4,7 @@ primitive type IBMFloat32 32 end
 ieeeOfPieces(fr::UInt32, exp::Int32, sgn::UInt32) = 
     reinterpret(Float32, convert(UInt32,fr >>> 9) | convert(UInt32,exp << 23) | sgn) :: Float32
 
-import Base.convert, Base.Float32
+import Base.convert, Base.Float32, Base.bswap
 
 function convert(::Type{Float32}, ibm::IBMFloat32)
     local fr::UInt32 = ntoh(reinterpret(UInt32, ibm))
@@ -29,3 +29,7 @@ function convert(::Type{Float32}, ibm::IBMFloat32)
 end
 Float32(ibm::IBMFloat32) = convert(Float32,ibm)
 ## From JuliaSeis
+
+function bswap(ibm::IBMFloat32)
+    return reinterpret(IBMFloat32, bswap(reinterpret(UInt32, ibm)))
+end
