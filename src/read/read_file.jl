@@ -18,8 +18,11 @@ Read entire SEGY file from stream 's', only reading the header values in 'keys'.
 """
 function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool; 
                    start_byte::Int = 3600, end_byte::Int = position(seekend(s)))
+
+    swap_bytes = bswap_needed(s)
+
     # Read File Header
-    fh = read_fileheader(s)
+    fh = read_fileheader(s; swap_bytes=swap_bytes)
     
     # Move to start of block
     seek(s, start_byte)
@@ -53,7 +56,7 @@ function read_file(s::IO, keys::Array{String, 1}, warn_user::Bool;
         tracee = min(trace + TRACE_CHUNKSIZE - 1, ntraces)
         chunk = length(trace:tracee)*trace_size
         sloc = IOBuffer(read(s, chunk))
-        read_traces!(sloc, view(headers, trace:tracee), view(data, :, trace:tracee), keys, th_b2s)
+        read_traces!(sloc, view(headers, trace:tracee), view(data, :, trace:tracee), keys, th_b2s; swap_bytes=swap_bytes)
     end
 
     return SeisBlock(fh, headers, data)

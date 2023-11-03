@@ -7,25 +7,25 @@ global s = IOBuffer(read(joinpath(SegyIO.myRoot,"data/overthrust_2D_shot_1_20.se
     ##0000
     @testset "read_fileheader" begin
        
-        fh = read_fileheader(s)
+        fh = read_fileheader(s, swap_bytes = true)
         @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == 751
         @test fh.bfh.Job == 1
 
-        fh = read_fileheader(s, ["ns"; "Job"])
+        fh = read_fileheader(s, ["ns"; "Job"], swap_bytes = true)
         @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == 751
         @test fh.bfh.Job == 1
 
-        fh = read_fileheader(s, bigendian = false )
+        fh = read_fileheader(s, swap_bytes = false)
         @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == -4350
         @test fh.bfh.Job == 16777216
 
-        fh = read_fileheader(s, ["ns"; "Job"], bigendian = false )
+        fh = read_fileheader(s, ["ns"; "Job"], swap_bytes = false)
         @test typeof(fh) == SegyIO.FileHeader 
         @test sizeof(fh.th) == 3200
         @test fh.bfh.ns == -4350
@@ -40,27 +40,27 @@ global s = IOBuffer(read(joinpath(SegyIO.myRoot,"data/overthrust_2D_shot_1_20.se
         seek(s, 3600)
         th_b2s = th_byte2sample()
 
-        th = read_traceheader(s, th_b2s)
+        th = read_traceheader(s, th_b2s, swap_bytes = true)
         @test typeof(th) == BinaryTraceHeader
         @test th.ns == 751
         @test th.SourceX == 400
         @test th.GroupX == 100
 
         seek(s, 3600)
-        th = read_traceheader(s, ["ns", "SourceX", "GroupX"], th_b2s)
+        th = read_traceheader(s, ["ns", "SourceX", "GroupX"], th_b2s, swap_bytes = true)
         @test typeof(th) == BinaryTraceHeader
         @test th.ns == 751
         @test th.SourceX == 400
         @test th.GroupX == 100
 
         seek(s, 3600)
-        th = read_traceheader(s, th_b2s, bigendian = false)
+        th = read_traceheader(s, th_b2s, swap_bytes = false)
         @test typeof(th) == BinaryTraceHeader
         @test th.ns == -4350
         @test th.SourceX == -1878982656
 
         seek(s, 3600)
-        th = read_traceheader(s, ["ns", "SourceX", "GroupX"], th_b2s, bigendian = false)
+        th = read_traceheader(s, ["ns", "SourceX", "GroupX"], th_b2s, swap_bytes = false)
         @test typeof(th) == BinaryTraceHeader
         @test th.ns == -4350
         @test th.SourceX == -1878982656
