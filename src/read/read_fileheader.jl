@@ -67,3 +67,19 @@ function read_fileheader(s::IO, keys::Array{String,1}; bigendian::Bool = true)
     seek(s, 3600)
     return FileHeader(String(th[1:3200]), bfh)
 end
+
+
+"""
+# Info
+
+Use: fileheader = read_fileheader(s::String; bigendian::Bool = true)
+
+Returns a binary file header formed using bytes 3200-3600 from the stream 's' that is 
+automatically opened then closed
+"""
+function read_fileheader(s::String; bigendian::Bool = true)
+    open(s) do file
+        fh = read_fileheader(file; bigendian=bigendian)
+        return fh
+    end
+end

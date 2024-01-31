@@ -25,9 +25,7 @@ function read_con(con::SeisCon, blocks::Array{Int,1};
     # Pre-allocate
     data = Array{datatype,2}(undef, con.ns, prealloc_traces) 
     headers = zeros(BinaryTraceHeader, prealloc_traces)
-    fh = FileHeader()
-    set_fileheader!(fh.bfh, :ns, con.ns)
-    set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
+    fh = read_fileheader(con.blocks[1].file)
 
     trace_count = 0
     # Read all blocks
@@ -75,8 +73,7 @@ function read_con(con::SeisCon, keys::Array{String,1}, blocks::Array{Int,1};
     # Pre-allocate
     data = Array{datatype,2}(undef, con.ns, prealloc_traces) 
     headers = zeros(BinaryTraceHeader, prealloc_traces)
-    fh = FileHeader(); set_fileheader!(fh.bfh, :ns, con.ns)
-    set_fileheader!(fh.bfh, :DataSampleFormat, con.dsf)
+    fh = read_fileheader(con.blocks[1].file)
 
     trace_count = 0
     # Read all blocks
