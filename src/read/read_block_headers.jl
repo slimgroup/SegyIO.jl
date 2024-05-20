@@ -3,6 +3,7 @@ export read_block_headers!
 function read_block_headers!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf::Int, headers)
 
     f = open(b.file)
+    swap_bytes = bswap_needed(f)
     seek(f, b.startbyte)
     brange = b.endbyte - b.startbyte
     s = IOBuffer(read(f, brange))
@@ -23,7 +24,7 @@ function read_block_headers!(b::BlockScan, keys::Array{String, 1}, ns::Int, dsf:
     tmph = zeros(UInt8, 240)
     # Read each traceheader
     for trace in 1:ntraces
-        read_traceheader!(s, keys, th_b2s, headers[trace]; th=tmph)
+        read_traceheader!(s, keys, th_b2s, headers[trace]; swap_bytes=swap_bytes, th=tmph)
         skip(s, ns*4)
     end
 
@@ -32,6 +33,7 @@ end
 function read_block_headers!(b::BlockScan, ns::Int, dsf::Int, headers)
 
     f = open(b.file)
+    swap_bytes = bswap_needed(f)
     seek(f, b.startbyte)
     brange = b.endbyte - b.startbyte
     s = IOBuffer(read(f, brange))
@@ -50,7 +52,7 @@ function read_block_headers!(b::BlockScan, ns::Int, dsf::Int, headers)
     th_b2s = th_byte2sample()
     # Read each traceheader
     for trace in 1:ntraces
-        read_traceheader!(s, th_b2s, headers[trace])
+        read_traceheader!(s, th_b2s, headers[trace]; swap_bytes=swap_bytes)
         skip(s, ns*4)
     end
 

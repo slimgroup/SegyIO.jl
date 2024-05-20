@@ -19,6 +19,7 @@ module SegyIO
     include("types/SeisCon.jl")
 
     #Reader
+    include("read/endianness.jl")
     include("read/read_fileheader.jl")
     include("read/read_traceheader.jl")
     include("read/read_trace.jl")
