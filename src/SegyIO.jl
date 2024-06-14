@@ -51,7 +51,6 @@ module SegyIO
     blank_th = BinaryTraceHeader()
 
     # Methods
-    include("methods/ordered_pmap.jl")
     include("methods/merge.jl")
     include("methods/split.jl")
     include("methods/set_header.jl")

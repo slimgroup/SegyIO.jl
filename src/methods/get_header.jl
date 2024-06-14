@@ -25,7 +25,7 @@ function get_header(block::SeisBlock, name_in::Union{Symbol, String}; scale::Boo
         scaling_factor = get_header(block, scale_name)
         out = Float64.(out)
         for ii in 1:ntraces
-            fact = scaling_factor[ii]
+            fact = scaling_factor[ii] == 0 ? 1 : scaling_factor[ii]
             fact > 0 ? out[ii] *= fact : out[ii] /= abs(fact) 
         end
     end
@@ -86,7 +86,7 @@ To get source coordinate pairs as an array, see `get_sources`.
 trace = get_header(s, "TraceNumber")
 
 """
-function get_header(con::SeisCon,name::String)
+function get_header(con::SeisCon, name::String)
     minmax = [con.blocks[i].summary[name] for i in 1:length(con)]
     I = length(minmax)
     vals = Array{Int32,2}(undef, I, 2)

@@ -1,5 +1,3 @@
-export scan_chunk
-
 function scan_chunk!(s::IO, max_blocks_per_chunk::Int, mem_block::Int, mem_trace::Int,
                     keys::Array{String,1}, file::String, scan::Array{BlockScan,1}, count::Int)
 
