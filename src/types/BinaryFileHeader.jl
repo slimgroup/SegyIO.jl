@@ -81,11 +81,14 @@ end
 fh_keys() = collect(keys(fh_byte2sample()))
 
 function show(io::IO, bfh::BinaryFileHeader)
-    
+    bf = fh_byte2sample()
     println("BinaryFileHeader:")
 
     for field in fieldnames(BinaryFileHeader)
-        s = @sprintf "     %30s: %9d" String(field) getfield(bfh, field)
+        byte = bf[String(field)] + 1
+        next = byte + sizeof(getfield(bfh, field)) - 1
+        sfield = "$(field) ($(byte)-$(next))"
+        s = @sprintf "     %40s: %9d" sfield getfield(bfh, field)
         println(s)
     end
     println("\n")

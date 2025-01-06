@@ -11,7 +11,7 @@ function set_traceheader!(traceheaders::Array{BinaryTraceHeader,1},
             setfield!(traceheaders[t], name, x_typed[t])
         end
     catch e
-        @warn "Unable to convert $x to $(ftype)"
+        @warn "Unable to convert $(first(x)) to $(ftype) for header $(name)"
         throw(e)
     end
 end

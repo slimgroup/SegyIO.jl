@@ -207,10 +207,14 @@ end
 Base.zeros(::Type{BinaryTraceHeader}, n::Integer) = [BinaryTraceHeader() for _=1:n]
 
 function show(io::IO, bth::BinaryTraceHeader)
+    th = th_byte2sample()
     
     println("BinaryTraceHeader:")
     for field in fieldnames(BinaryTraceHeader)
-        s = @sprintf "     %30s: %9d" String(field) getfield(bth, field)
+        byte = th[String(String(field))] + 1
+        next = byte + sizeof(getfield(bth, field)) - 1
+        sfield = "$(field) ($(byte)-$(next))"
+        s = @sprintf "     %40s: %9d" sfield getfield(bth, field)
         println(s)
     end
     println("\n")
